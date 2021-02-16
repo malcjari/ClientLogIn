@@ -31,6 +31,7 @@ namespace ClientLogIn.Controllers
         public async Task<IActionResult> IndexAsync()
         {
             var user = await _userManager.FindByNameAsync("AltoGAdmin");
+            
 
 
             return View();
