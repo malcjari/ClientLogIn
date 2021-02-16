@@ -27,7 +27,7 @@ namespace ClientLogIn.Controllers
             _roleManager = roleManager;
             _context = context;
         }
-
+        //hej på dig
         public async Task<IActionResult> IndexAsync()
         {
             var user = await _userManager.FindByNameAsync("AltoGAdmin");
