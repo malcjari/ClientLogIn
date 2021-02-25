@@ -1,8 +1,56 @@
-﻿@{
-    ViewData["Title"] = "Home Page";
+﻿@model ClientLogIn.Models.User
+@{
+    ViewData["Title"] = "IndexAsync";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
-</div>
+<h1>Användare</h1>
+
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title></title>
+</head>
+<body>
+
+    <div class="container-fluid">
+        <div class="row">
+            <div>
+
+
+
+                <p>Namn: @Html.DisplayFor(m => m.Name)</p>
+
+                <p>StreetNo: @Html.DisplayFor(m => m.StreetNo)</p>
+
+                <p> city:  @Html.DisplayFor(m => m.City)</p>
+
+                <p> Zipcode:  @Html.DisplayFor(m => m.ZipCode)</p>
+
+
+                <p> Email:  @Html.DisplayFor(m => m.Email)</p>
+
+
+                <p> Telefon:  @Html.DisplayFor(m => m.PhoneNumber)</p>
+
+                <a asp-controller="Home" asp-action="Editemployee" asp-route-id="@Model.Id" class="btn btn-primary"> Redigera </a>
+
+            </div>
+           
+            <div class="row">
+
+
+
+
+            </div>
+
+
+        </div>
+
+
+
+
+    </div>
+
+</body>
+</html>
