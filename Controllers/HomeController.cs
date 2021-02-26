@@ -52,6 +52,7 @@ namespace ClientLogIn.Controllers
                 User _user = _userManager.FindByIdAsync(Userid).Result;
                 return View(_user);
             }
+
             return View();
         }
 

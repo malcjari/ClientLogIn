@@ -1,0 +1,219 @@
+﻿@model ClientLogIn.Models.ViewModel
+
+@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+}
+
+<div class="container">
+
+    @*Profil rad*@
+    <div id="profile-row" class="row">
+        <div>
+            <div class="card">
+                <form>
+                    <label for="name-input">Namn</label>
+                    <input id="name-input" asp-for=user.Name disabled />
+                    <label for="streetNo-input">Gata</label>
+                    <input id="streeNo-input" asp-for=user.StreetNo disabled />
+                    <label for="zipCode-input">Postnummer</label>
+                    <input id="zipCode-input" asp-for=user.ZipCode disabled />
+                    <label for="city-input">Stad</label>
+                    <input id="city-input" asp-for=user.City disabled />
+                    <label for="phoneNumber-input">Telefon</label>
+                    <input id="phoneNumber-input" asp-for=user.PhoneNumber disabled />
+                </form>
+            </div>        
+            <a asp-controller="Home" asp-action="Editemployee" asp-route-id="@Model.user.Id" class="btn btn-primary"> Redigera </a>
+
+        </div>
+
+    </div>
+
+
+
+
+
+
+    @*Calendar rad*@
+    <div id="calendar-row" class="row">
+
+        <div id="calendar" class="container">
+            <div id="calendar-header" style="text-align:center">
+                <div id="calendar-header-title">
+                    <h4>@Model.dayData.MonthName</h4>
+                </div>
+
+                @*Kalenderns knappar*@
+                <div id="calendar-header-controller" class="row justify-content-between">
+
+
+                    <a asp-action="Index" asp-route-iDate="@{ @Model.dayData.FullDate.AddMonths(-1);}"> <img class="calendar-header-btn my-1 vw-90" src="~/arrow-left-square.svg" /></a>
+                    <a asp-action="Index" asp-route-iDate="@{ @Model.dayData.FullDate.AddMonths(1);}"> <img class="calendar-header-btn my-1 vw-90" src="~/arrow-right-square.svg" /></a>
+
+                </div>
+            </div>
+
+            @*Veckodagarnas namn*@
+            <div id="calendar-table-header" class="row">
+                <div class="col calendar-header-cell">
+                    <p>Måndag</p>
+                </div>
+                <div class="col calendar-header-cell">
+                    <p>Tisdag</p>
+                </div>
+                <div class="col calendar-header-cell">
+                    <p>Onsdag</p>
+                </div>
+                <div class="col calendar-header-cell">
+                    <p>Torsdag</p>
+                </div>
+                <div class="col calendar-header-cell">
+                    <p>Fredag</p>
+                </div>
+                <div class="col calendar-header-cell">
+                    <p>Lördag</p>
+                </div>
+                <div class="col calendar-header-cell">
+                    <p>Söndag</p>
+                </div>
+            </div>
+            <div class="row">
+
+                @*Skriver ut toma celler så att månadens första dag hamnar under rätt kolumn*@
+
+                @for (int i = 0; i < Model.dayData.FirstDayOfWeek; i++)
+                {
+                    <div class="col calendar-cell row-cols-7"></div>
+                }
+
+
+                @*Skriver ut lika många celler i kalendern som det finns dagar för den aktiva månaden*@
+                @for (int i = 0; i < Model.dayData.Days; i++)
+                {
+                    //Ökar siffran med ett så att datumet blir rätt för varje cell
+                    ViewBag.count++;
+
+                    if (ViewBag.count == Model.dayData.TodaysDate)
+                    {
+
+                    }
+                    else
+                    {
+
+                    }
+
+                    <div class="col calendar-cell row-cols-7" data-toggle="modal" data-target="#id-@ViewBag.count">
+
+                        <div>
+                            @*Skriver ut rätt datum för varje cell i kalendern*@
+                            @ViewBag.count
+                            @{ Model.dayData.ClickedFullDate = new DateTime(Model.dayData.FullDate.Year, Model.dayData.FullDate.Month, @ViewBag.count);}
+                        </div>
+
+
+
+                        <div class="row row-cols-1">
+
+                            @*Skriver ut rätt arbetspass för rätt datum*@
+                            @foreach (var item in Model.arbetspassList)
+                            {
+                                if (item.Date.Day == ViewBag.count)
+                                {
+                                    if (item.Shift == 1)
+                                    {
+                                        <div class="day-shift col order-first">
+                                            <div>
+                                                Dagsskift
+                                            </div>
+                                        </div>
+                                    }
+                                    else if (item.Shift == 2)
+                                    {
+                                        <div class="evening-shift col align-self-center">
+                                            <div>
+                                                Kvällsskift
+                                            </div>
+                                        </div>
+                                    }
+                                    else
+                                    {
+                                        <div class="night-shift col order-last">
+                                            <div>
+                                                Nattskift
+                                            </div>
+                                        </div>
+                                    }
+                                }
+                            }
+                        </div>
+                    </div>
+
+                    @*Informations rutan som dyker upp när man klickar på en cell*@
+                    <div class="modal fade" id="id-@ViewBag.count" data-backdrop="static" data-keyboard="true">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title">Add Work-Shift</h5>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                                <form method="post">
+                                    <div class="modal-body">
+                                        <input id="dateSelect" type="date" class="form-control mb-2" asp- asp-for="arbetspass.Date" value="@Model.dayData.ClickedFullDate.ToString("yyyy-MM-dd")" />
+                                        <select id="shiftSelect" class="custom-select mb-2" asp-for="arbetspass.Shift" asp-items="ViewBag.shiftList"></select>
+                                        <select id="taskSelect" class="custom-select" asp-for="arbetspass.Task" asp-items="ViewBag.taskList"></select>
+                                    </div>
+                                    <div class="modal-body">
+                                        <hr />
+                                        <div class="card">
+                                            <table class="table-striped">
+                                                <thead>
+                                                    <tr>
+                                                        <th>Date</th>
+                                                        <th>Shift</th>
+                                                        <th>Task</th>
+                                                    </tr>
+                                                </thead>
+                                                @*Skriver ut alla arbetspass som finns på den valda dagen i en tabell*@
+                                                <tbody class="table table-striped">
+                                                    @foreach (var item in Model.arbetspassList)
+                                                    {
+                                                        if (item.Date.Day == ViewBag.count)
+                                                        {
+                                                            <tr>
+                                                                <td>@item.Date.ToString("yyyy-MM-dd")</td>
+                                                                <td>@item.Shift</td>
+                                                                <td>@item.Task</td>
+                                                                <td><a asp-action="Delete" asp-controller="Home" asp-route-id="@item.Id"><img src="~/trash-fill.svg" /></a></td>
+                                                            </tr>
+                                                        }
+
+                                                    }
+                                                </tbody>
+                                            </table>
+                                        </div>
+
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                                        <button type="submit" asp-action="Add" asp-route-arbetspass="@Model.arbetspass" class="btn btn-primary">Add</button>
+                                    </div>
+                                </form>
+
+                            </div>
+                        </div>
+                    </div>
+
+
+
+                }
+            </div>
+        </div>
+
+
+    </div>
+
+</div>
