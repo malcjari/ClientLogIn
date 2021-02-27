@@ -1,4 +1,5 @@
 ﻿using ClientLogIn.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -11,6 +12,8 @@ using WebApplication2.Models;
 
 namespace ClientLogIn.Controllers
 {
+
+    [Authorize]
     public class Profile : Controller
     {
         private readonly UserManager<User> _userManager;

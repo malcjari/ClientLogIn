@@ -8,24 +8,85 @@
 
 <div class="container">
 
+
+    @if (User.IsInRole("SysAdmin"))
+    {
+        <h2>SysAdmin</h2>
+    }
+
+
+
     @*Profil rad*@
     <div id="profile-row" class="row">
         <div>
             <div class="card">
-                <form>
-                    <label for="name-input">Namn</label>
-                    <input id="name-input" asp-for=user.Name disabled />
-                    <label for="streetNo-input">Gata</label>
-                    <input id="streeNo-input" asp-for=user.StreetNo disabled />
-                    <label for="zipCode-input">Postnummer</label>
-                    <input id="zipCode-input" asp-for=user.ZipCode disabled />
-                    <label for="city-input">Stad</label>
-                    <input id="city-input" asp-for=user.City disabled />
-                    <label for="phoneNumber-input">Telefon</label>
-                    <input id="phoneNumber-input" asp-for=user.PhoneNumber disabled />
+                <form id="profile-info-form">
+                    <div class="form-group">
+                        <label for="name-input">Namn</label>
+                        <input class="form-control" id="name-input" asp-for=user.Name disabled />
+                    </div>
+                    <div class="form-group">
+
+                    </div>
+                    <div class="form-group">
+                        <label for="streetNo-input">Gata</label>
+                        <input class="form-control" id="streeNo-input" asp-for=user.StreetNo disabled />
+                    </div>
+                    <div class="form-group">
+                        <label for="zipCode-input">Postnummer</label>
+                        <input class="form-control" id="zipCode-input" asp-for=user.ZipCode disabled />
+                    </div>
+                    <div>
+                        <label for="city-input">Stad</label>
+                        <input class="form-control" id="city-input" asp-for=user.City disabled />
+                    </div>
+                    <div>
+                        <label for="phoneNumber-input">Telefon</label>
+                        <input class="form-control" id="phoneNumber-input" asp-for=user.PhoneNumber disabled />
+                    </div>
+                    <a asp-controller="Home" asp-action="Editemployee" asp-route-id="@Model.user.Id" class="btn btn-primary"> Redigera </a>
+                    <button id="toggle-password-btn" class="btn btn-info">Ändra Lösenord</button>
                 </form>
-            </div>        
-            <a asp-controller="Home" asp-action="Editemployee" asp-route-id="@Model.user.Id" class="btn btn-primary"> Redigera </a>
+
+                
+                <form id="reset-password-form" method="post">
+
+                    <div class="form-group">
+                        <label>Nuvarande Lösenord</label>
+                        <input class="form-control" type="password" id="old-password-input" />
+                    </div>
+                        
+                    <div class="form-group">
+                        <label>Nytt Lösenord</label>
+                        <input class="form-control" type="password" id="new-password-input" />
+                        <small class="form-text text-muted">Måste innehålla minst 8 tecken varav minst en stor bokstav och minst en siffra!</small>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Upprepa Lösenord</label>
+                        <input class="form-control" type="password" id="new-password-input-again" />
+                        <small class="form-text text-muted">Upprepa nytt lösenord</small>
+                    </div>
+
+                    <div class="form-group">
+                        <button class="btn btn-outline-success" type="submit">Spara</button>
+                        <button class="btn btn-outline-danger">Avbryt</button>
+                    </div>              
+
+                </form>
+
+                @*<button id="toggle-email-btn" class="btn-info">Ändra Epost</button>
+                <form id="reset-email-form">
+                    <label for=""></label>
+                    <input type="email" id="new-password-input" />
+                    <input type="email" id="new-password-input-again" />
+                    <button class="btn-outline-success" type="submit">Spara</button>
+                    <button class="btn-outline-danger">Avbryt</button>
+                </form>*@
+
+                <form id="reset-password-form"></form>
+            </div>
+            
 
         </div>
 

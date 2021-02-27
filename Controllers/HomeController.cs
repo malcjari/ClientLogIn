@@ -33,28 +33,22 @@ namespace ClientLogIn.Controllers
 
         public ActionResult Index()
         {
-            //User u = new User();
-
-            //u.Name = "wasim";
-            //u.StreetNo = "Siriusgatan 199";
-            //u.City = "gotham";
-            //u.ZipCode = 41525;
-            //u.PhoneNumber = "070666049494";
-            //u.Email = "Wasim_ajaja@homtial.cn";
-
-            var Userid = _userManager.GetUserId(HttpContext.User);
-            if (Userid == null)
-            {
-                RedirectToAction("Loginsidan");
-            }
-            else
-            {
-                User _user = _userManager.FindByIdAsync(Userid).Result;
-                return View(_user);
-            }
 
             return View();
         }
+
+        public async Task<IActionResult> LogIn()
+        {
+            User u = await _userManager.FindByNameAsync("AltoGAdmin");
+
+
+            await _signInManager.SignInAsync(u,false, null);
+
+            
+
+            return RedirectToAction("Index", "Profile");
+        }
+
 
         public async Task<IActionResult> EditemployeeAsync(int id)
         {
@@ -113,9 +107,3 @@ namespace ClientLogIn.Controllers
         }
     }
 }
-//var user = await _userManager.FindByNameAsync(Id.ToString());
-//var Anvandare = _userManager.FindByIdAsync(Id.ToString());
-////var anvandare = await _userManager.FindByIdAsync(Id.ToString());
-//return View(anvandare);
-//var anvandare = await _context.Users.FirstOrDefaultAsync(m => m.Id == Id);
-//Anvandare =   _context.Users.Where(s => s.Id == Id).ToList()
