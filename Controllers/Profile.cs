@@ -33,7 +33,7 @@ namespace ClientLogIn.Controllers
             _context = context;
         }
         
-        public IActionResult Index(DateTime iDate, int id)
+        public async Task<IActionResult> IndexAsync(DateTime iDate, int id)
         {
 
 
@@ -44,6 +44,9 @@ namespace ClientLogIn.Controllers
             InitArbetsPass(list);
             viewModel.arbetspassList = list;
 
+
+            viewModel.arbetspass.UserId = Int32.Parse(_userManager.GetUserId(HttpContext.User));
+            viewModel.user = await _userManager.FindByIdAsync(id.ToString());
 
             ViewBag.count = 0;
 
@@ -139,14 +142,13 @@ namespace ClientLogIn.Controllers
 
             }
 
-
-
             return View();
         }
 
+
         public IActionResult Delete(int id)
         {
-            list.Remove(list.Where(ws => ws.Id == id).FirstOrDefault());
+            //list.Remove(list.Where(ws => ws.Id == id).FirstOrDefault());
             return RedirectToAction("Index");
         }
 
