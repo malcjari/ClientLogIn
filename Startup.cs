@@ -37,6 +37,8 @@ namespace ClientLogIn
                 options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"));
             });
 
+            services.ConfigureApplicationCookie(option => option.LoginPath = "/User/Login");
+
             services.AddControllersWithViews();
         }
 
