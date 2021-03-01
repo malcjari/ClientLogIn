@@ -1,0 +1,26 @@
+﻿@using System.Security.Claims;
+@using Microsoft.AspNetCore.Identity;
+@inject SignInManager<User> _signInManager;
+@{
+    ViewData["Title"] = "AdminProfile";
+}
+
+<h1>AdminProfile</h1>
+
+<div class="card" style="width: 18rem;">
+    <img class="card-img-top" src="https://cutt.ly/jlLGMRZ" alt="Card image cap">
+    <div class="card-body">
+        <h5 class="card-title">@ViewBag.Msg</h5>
+        <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+        <a href="#" class="btn btn-primary">Go somewhere</a>
+    </div>
+</div>
+
+@if(_signInManager.IsSignedIn(User))
+{
+    <form method="post" asp-controller="User" asp-action="Logout">
+        <input type="submit" value="Logout" />
+    </form>
+    
+}
+
