@@ -27,7 +27,8 @@ namespace ClientLogIn
         {
             services.AddIdentity<User, Role>(options =>
             {
-
+                options.Password.RequireNonAlphanumeric = false;
+                options.Password.RequiredLength = 8;
 
             }).AddEntityFrameworkStores<MyContext>()
             .AddDefaultTokenProviders();
@@ -37,9 +38,11 @@ namespace ClientLogIn
                 options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"));
             });
 
+
             services.ConfigureApplicationCookie(option => option.LoginPath = "/User/Login");
 
             services.AddControllersWithViews();
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

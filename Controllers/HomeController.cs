@@ -1,6 +1,7 @@
 ﻿using ClientLogIn.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
@@ -28,18 +29,75 @@ namespace ClientLogIn.Controllers
             _context = context;
         }
 
-        public async Task<IActionResult> IndexAsync()
-        {
-            var user = await _userManager.FindByNameAsync("AltoGAdmin");
 
+
+        public ActionResult Index()
+        {
 
             return View();
         }
 
-        public IActionResult Privacy()
+        public async Task<IActionResult> LogIn()
         {
+            User u = await _userManager.FindByNameAsync("AltoGAdmin");
+
+
+            await _signInManager.SignInAsync(u,false, null);
+
+            
+
+            return RedirectToAction("Index", "Profile");
+        }
+
+
+        public async Task<IActionResult> EditemployeeAsync(int id)
+        {
+            User user = await _userManager.FindByNameAsync(id.ToString());
+            if (user != null) 
+            {
+                return View(user);
+            }
+            else
+            {
+                RedirectToAction("Index");
+            }
+            return View();
+        }[HttpPost]
+
+        public async Task<IActionResult> Editemployee (User user)
+        {
+            User _user = new User();
+            _user = await _userManager.FindByIdAsync(user.Id.ToString());
+            if (_user!=null)
+            {
+                _user.Name = user.Name;
+                _user.StreetNo = user.StreetNo;
+                _user.City = user.City;
+                _user.ZipCode = user.ZipCode;
+                _user.PhoneNumber = user.PhoneNumber;
+                _user.Email = user.Email;
+
+                var resultat = await _userManager.UpdateAsync(_user);
+                
+                if (resultat.Succeeded)
+                {
+                    RedirectToAction("Index");
+                }
+                else
+                {
+                    foreach (var error in resultat.Errors)
+                    {
+                        ModelState.AddModelError(string.Empty, error.Description);
+                    }
+                }
+            
+            }
+            
+            
+
             return View();
         }
+
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
