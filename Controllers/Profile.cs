@@ -13,7 +13,7 @@ using ClientLogIn.Models;
 namespace ClientLogIn.Controllers
 {
 
-
+    [Authorize]
     public class Profile : Controller
     {
         private readonly UserManager<User> _userManager;
@@ -37,14 +37,14 @@ namespace ClientLogIn.Controllers
         public async Task<IActionResult> Index(DateTime iDate, int id)
         {
 
-
-
             ViewModel viewModel = new ViewModel();
             //Skapar alla WorkShift och lägger i viewModelListan
 
             viewModel.WorkShiftList = list;
 
 
+            ViewBag.userId = 2;
+            viewModel.WorkShift.Id = 3;
             //viewModel.WorkShift.UserId = Int32.Parse(_userManager.GetUserId(HttpContext.User));
             //viewModel.user = await _userManager.FindByIdAsync(id.ToString());
 
@@ -71,15 +71,16 @@ namespace ClientLogIn.Controllers
             }
 
             //Sorterar WorkShift efer aktiv månad
-            viewModel.WorkShiftList = viewModel.WorkShiftList.Where(ap => ap.Date.Month == viewModel.dayData.Month).ToList();
+            viewModel.WorkShiftList = _context.WorkShifts.Where(ap => ap.Date.Month == viewModel.dayData.Month).ToList();
 
 
 
             //Initierar och skapar select listor för formuläret
-            Dictionary<int, string> shiftDict = InitShiftList();
-            SelectList shiftList = new SelectList(shiftDict, "Key", "Value");
-            Dictionary<int, string> taskDict = InitTaskList();
-            SelectList taskList = new SelectList(taskDict, "Key", "Value");
+
+            var shifts = _context.ShiftTypes.ToList();
+            var tasks = _context.Tasks.ToList();
+            SelectList shiftList = new SelectList(shifts, "Id", "Name");
+            SelectList taskList = new SelectList(tasks, "Id", "Name");
 
 
 
@@ -182,8 +183,6 @@ namespace ClientLogIn.Controllers
         public async Task<IActionResult> ResetEmail(int id,string newEmail)
         {
 
-
-
             var user = await _userManager.FindByIdAsync(id.ToString());
 
             var emailExist = await _userManager.FindByEmailAsync(newEmail);
@@ -221,9 +220,8 @@ namespace ClientLogIn.Controllers
         [HttpPost]
         public IActionResult Add(WorkShift WorkShift)
         {
-
-            //_context.WorkShifts.Add(WorkShift)
-            //_context.SaveChanges();
+            _context.WorkShifts.Add(WorkShift);
+            _context.SaveChanges();
             return RedirectToAction("Index");
         }
 
@@ -278,29 +276,6 @@ namespace ClientLogIn.Controllers
 
 
             return list;
-        }
-
-        
-
-        public Dictionary<int, string> InitShiftList()
-        {
-            Dictionary<int, string> returnList = new Dictionary<int, string>();
-
-            returnList.Add(1, "Day");
-            returnList.Add(2, "Evening");
-            returnList.Add(3, "Night");
-
-            return returnList;
-        }
-
-        public Dictionary<int, string> InitTaskList()
-        {
-            Dictionary<int, string> returnList = new Dictionary<int, string>();
-
-            returnList.Add(1, "Reception");
-            returnList.Add(2, "Cleaning");
-
-            return returnList;
         }
     }
 }

@@ -235,6 +235,7 @@
                                         <input id="dateSelect" type="date" class="form-control mb-2" asp- asp-for="WorkShift.Date" value="@Model.dayData.ClickedFullDate.ToString("yyyy-MM-dd")" />
                                         <select id="shiftSelect" class="custom-select mb-2" asp-for="WorkShift.ShiftTypeId" asp-items="ViewBag.shiftList"></select>
                                         <select id="taskSelect" class="custom-select" asp-for="WorkShift.TaskId" asp-items="ViewBag.taskList"></select>
+                                        <input hidden asp-for="WorkShift.UserId" value="@ViewBag.userId" />
                                     </div>
                                     <div class="modal-body">
                                         <hr />
