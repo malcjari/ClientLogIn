@@ -27,7 +27,8 @@ namespace ClientLogIn
         {
             services.AddIdentity<User, Role>(options =>
             {
-
+                options.Password.RequireNonAlphanumeric = false;
+                options.Password.RequiredLength = 8;
 
             }).AddEntityFrameworkStores<MyContext>()
             .AddDefaultTokenProviders();
@@ -36,6 +37,15 @@ namespace ClientLogIn
             {
                 options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"));
             });
+
+            services.AddAuthentication("CookieAuth")
+                .AddCookie("CookieAuth", config =>
+                {
+
+                    config.Cookie.Name = "Cookie1";
+                    config.LoginPath = "Home/Index";
+
+                });
 
             services.AddControllersWithViews();
         }

@@ -1,8 +1,28 @@
-﻿@{
-    ViewData["Title"] = "Home Page";
+﻿@model ClientLogIn.Models.User
+@{
+    ViewData["Title"] = "IndexAsync";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
-</div>
+<h1>Användare</h1>
+
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title></title>
+</head>
+<body>
+
+    <div class="container-fluid">
+        <div class="row">
+            
+            <a class="btn" asp-action="LogIn" asp-controller="Home">LogIn</a>
+        </div>
+
+
+
+
+    </div>
+
+</body>
+</html>
