@@ -8,7 +8,6 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
-using ClientLogIn.Models;
 
 namespace ClientLogIn.Controllers
 {
@@ -36,17 +35,23 @@ namespace ClientLogIn.Controllers
         
         public async Task<IActionResult> Index(DateTime iDate, int id)
         {
-
             ViewModel viewModel = new ViewModel();
-            //Skapar alla WorkShift och lägger i viewModelListan
 
-            viewModel.WorkShiftList = list;
+            var activeUser = await _userManager.GetUserAsync(HttpContext.User);
+            var isSysAdmin = await _userManager.IsInRoleAsync(activeUser, "SysAdmin");
+
+            if(isSysAdmin) {
+
+                viewModel.user = await _userManager.FindByIdAsync(id.ToString());
+
+            } else
+            {
+                viewModel.user = activeUser;
+            }
 
 
             ViewBag.userId = 2;
-            viewModel.WorkShift.Id = 3;
-            //viewModel.WorkShift.UserId = Int32.Parse(_userManager.GetUserId(HttpContext.User));
-            //viewModel.user = await _userManager.FindByIdAsync(id.ToString());
+
 
             ViewBag.count = 0;
 
@@ -70,7 +75,7 @@ namespace ClientLogIn.Controllers
                 viewModel.dayData.FirstDayOfWeek = DateMapper(date, viewModel);
             }
 
-            //Sorterar WorkShift efer aktiv månad
+            //Hämtar och Sorterar WorkShift efer aktiv månad
             viewModel.WorkShiftList = _context.WorkShifts.Where(ap => ap.Date.Month == viewModel.dayData.Month).ToList();
 
 
@@ -84,15 +89,6 @@ namespace ClientLogIn.Controllers
 
 
 
-            User u = new User();
-
-            u.Name = "wasim";
-            u.StreetNo = "Siriusgatan 199";
-            u.City = "gotham";
-            u.ZipCode = 41525;
-            u.PhoneNumber = "070666049494";
-            u.Email = "Wasim_ajaja@homtial.cn";
-            viewModel.user = u;
 
 
 
@@ -117,6 +113,7 @@ namespace ClientLogIn.Controllers
 
 
         // Metod för ändnring av användarprofil
+        [HttpPost]
         public async Task<IActionResult> Editemployee(User user)
         {
             User _user = new User();
@@ -146,7 +143,7 @@ namespace ClientLogIn.Controllers
 
             }
 
-            return View();
+            return RedirectToAction("Index");
         }
 
 
@@ -209,6 +206,9 @@ namespace ClientLogIn.Controllers
         //[Authorize(Roles = "SysAdmin")]
         public IActionResult Delete(int id)
         {
+            WorkShift w = _context.WorkShifts.Find(id);
+            _context.Remove(w);
+            _context.SaveChanges();
             //list.Remove(list.Where(ws => ws.Id == id).FirstOrDefault());
 
 
@@ -271,11 +271,5 @@ namespace ClientLogIn.Controllers
             return number;
         }
 
-        public List<WorkShift> WorkShiftFromMonth(int month, List<WorkShift> list)
-        {
-
-
-            return list;
-        }
     }
 }

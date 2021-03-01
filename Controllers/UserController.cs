@@ -134,6 +134,9 @@ namespace ClientLogIn.Controllers
         [HttpPost]
         public async Task<IActionResult> Login(LoginModel loginModel)
         {
+            var s = await _userManager.FindByNameAsync("TestTest");
+            await _userManager.AddToRoleAsync(s,"Employee");
+
             if (ModelState.IsValid)
             {
                 var user = await _userManager.FindByNameAsync(loginModel.Username);

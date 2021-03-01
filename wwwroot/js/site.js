@@ -28,6 +28,7 @@ function editprofile()
         $("#zipCode-input").attr("disabled", Disabled)
         $("#city-input").attr("disabled", Disabled)
         $("#phoneNumber-input").attr("disabled", Disabled)
+        $("#email-input").attr("disabled", Disabled)
         $("#Save-edit").toggle();
         if (Disabled == true) {
             $(this).removeClass("btn-danger");
