@@ -85,7 +85,14 @@ namespace ClientLogIn.Controllers
         [HttpPost]
         public async Task<IActionResult> Edit(User user)
         {
-            var newUsr = await _userManager.UpdateAsync(user);
+            var editUsr = await _userManager.FindByIdAsync(user.Id.ToString());
+            editUsr.Name = user.Name;
+            editUsr.StreetNo = user.StreetNo;
+            editUsr.City = user.City;
+            editUsr.ZipCode = user.ZipCode;
+            editUsr.Email = user.Email;
+            editUsr.PhoneNumber = user.PhoneNumber;
+            var newUsr = await _userManager.UpdateAsync(editUsr);
             if (newUsr.Succeeded)
             {
                 ViewBag.SuccMsg = "User successfully updated.";
@@ -94,7 +101,7 @@ namespace ClientLogIn.Controllers
             {
                 ViewBag.Error = "Something went wrong.";
             }
-            return RedirectToAction(nameof(Index));
+            return RedirectToAction(nameof(GetAllUsers));
         }
 
 
