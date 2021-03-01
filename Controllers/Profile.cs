@@ -13,7 +13,7 @@ using WebApplication2.Models;
 namespace ClientLogIn.Controllers
 {
 
-    [Authorize]
+    
     public class Profile : Controller
     {
         private readonly UserManager<User> _userManager;
@@ -21,7 +21,7 @@ namespace ClientLogIn.Controllers
         private readonly RoleManager<Role> _roleManager;
         private readonly MyContext _context;
         private string errorMessage;
-        public List<ArbetsPass> list = new List<ArbetsPass>();
+        public List<WorkShift> list = new List<WorkShift>();
 
         public Profile(UserManager<User> userManager,
             SignInManager<User> signInManager,
@@ -40,14 +40,14 @@ namespace ClientLogIn.Controllers
 
 
             ViewModel viewModel = new ViewModel();
-            //Skapar alla arbetspass och lägger i viewModelListan
+            //Skapar alla WorkShift och lägger i viewModelListan
 
-            InitArbetsPass(list);
-            viewModel.arbetspassList = list;
+            InitWorkShift(list);
+            viewModel.WorkShiftList = list;
 
 
-            viewModel.arbetspass.UserId = Int32.Parse(_userManager.GetUserId(HttpContext.User));
-            viewModel.user = await _userManager.FindByIdAsync(id.ToString());
+            //viewModel.WorkShift.UserId = Int32.Parse(_userManager.GetUserId(HttpContext.User));
+            //viewModel.user = await _userManager.FindByIdAsync(id.ToString());
 
             ViewBag.count = 0;
 
@@ -71,8 +71,8 @@ namespace ClientLogIn.Controllers
                 viewModel.dayData.FirstDayOfWeek = DateMapper(date, viewModel);
             }
 
-            //Sorterar arbetspass efer aktiv månad
-            viewModel.arbetspassList = viewModel.arbetspassList.Where(ap => ap.Date.Month == viewModel.dayData.Month).ToList();
+            //Sorterar WorkShift efer aktiv månad
+            viewModel.WorkShiftList = viewModel.WorkShiftList.Where(ap => ap.Date.Month == viewModel.dayData.Month).ToList();
 
 
 
@@ -113,7 +113,7 @@ namespace ClientLogIn.Controllers
 
             return View(viewModel);
         }
-
+        // Metod för ändnring av användarprofil
         public async Task<IActionResult> Editemployee(User user)
         {
             User _user = new User();
@@ -157,10 +157,10 @@ namespace ClientLogIn.Controllers
 
 
         [HttpPost]
-        public IActionResult Add(ArbetsPass arbetspass)
+        public IActionResult Add(WorkShift WorkShift)
         {
 
-            //_context.WorkShifts.Add(arbetspass)
+            //_context.WorkShifts.Add(WorkShift)
             //_context.SaveChanges();
             return RedirectToAction("Index");
         }
@@ -228,7 +228,7 @@ namespace ClientLogIn.Controllers
             viewModel.dayData.Days = DateTime.DaysInMonth(date.Year, date.Month);
             //Hämtar månadens namn i en sträng för användning i kalenderns header
             viewModel.dayData.MonthName = DateTimeFormatInfo.CurrentInfo.GetMonthName(date.Month).ToUpper();
-            //Hämtar månadens nr för att sortera arbetspass efter detta numret och visa rätt pass för rätt månad
+            //Hämtar månadens nr för att sortera WorkShift efter detta numret och visa rätt pass för rätt månad
             viewModel.dayData.Month = date.Month;
             DateTime todaysDate = DateTime.Now;
             viewModel.dayData.TodaysDate = todaysDate.Day;
@@ -266,14 +266,14 @@ namespace ClientLogIn.Controllers
             return number;
         }
 
-        public List<ArbetsPass> ArbetsPassFromMonth(int month, List<ArbetsPass> list)
+        public List<WorkShift> WorkShiftFromMonth(int month, List<WorkShift> list)
         {
 
 
             return list;
         }
 
-        public void InitArbetsPass(List<ArbetsPass> list)
+        public void InitWorkShift(List<WorkShift> list)
         {
             DateTime date1 = new DateTime(2020, 2, 1);
             DateTime date2 = new DateTime(2020, 2, 02);
@@ -284,13 +284,13 @@ namespace ClientLogIn.Controllers
 
 
 
-            ArbetsPass arb1 = new ArbetsPass(1, date1, 1, "Reception");
-            ArbetsPass arb2 = new ArbetsPass(2, date2, 1, "Cleaning");
-            ArbetsPass arb3 = new ArbetsPass(3, date3, 2, "Reception");
-            ArbetsPass arb4 = new ArbetsPass(4, date4, 2, "Preperations");
-            ArbetsPass arb5 = new ArbetsPass(5, date5, 3, "Preperations");
-            ArbetsPass arb6 = new ArbetsPass(6, date6, 3, "Guard-duty");
-            ArbetsPass arb7 = new ArbetsPass(7, date1, 2, "Guard-duty");
+            WorkShift arb1 = new WorkShift(1, date1, 1, "Reception");
+            WorkShift arb2 = new WorkShift(2, date2, 1, "Cleaning");
+            WorkShift arb3 = new WorkShift(3, date3, 2, "Reception");
+            WorkShift arb4 = new WorkShift(4, date4, 2, "Preperations");
+            WorkShift arb5 = new WorkShift(5, date5, 3, "Preperations");
+            WorkShift arb6 = new WorkShift(6, date6, 3, "Guard-duty");
+            WorkShift arb7 = new WorkShift(7, date1, 2, "Guard-duty");
 
             DateTime date11 = new DateTime(2020, 3, 1);
             DateTime date12 = new DateTime(2020, 3, 03);
@@ -300,13 +300,13 @@ namespace ClientLogIn.Controllers
             DateTime date16 = new DateTime(2020, 3, 24);
 
 
-            ArbetsPass arb11 = new ArbetsPass(11, date11, 1, "Reception");
-            ArbetsPass arb12 = new ArbetsPass(12, date12, 1, "Cleaning");
-            ArbetsPass arb13 = new ArbetsPass(13, date13, 2, "Reception");
-            ArbetsPass arb14 = new ArbetsPass(14, date14, 2, "Preperations");
-            ArbetsPass arb15 = new ArbetsPass(15, date15, 3, "Preperations");
-            ArbetsPass arb16 = new ArbetsPass(16, date16, 3, "Guard-duty");
-            ArbetsPass arb17 = new ArbetsPass(17, date16, 2, "Guard-duty");
+            WorkShift arb11 = new WorkShift(11, date11, 1, "Reception");
+            WorkShift arb12 = new WorkShift(12, date12, 1, "Cleaning");
+            WorkShift arb13 = new WorkShift(13, date13, 2, "Reception");
+            WorkShift arb14 = new WorkShift(14, date14, 2, "Preperations");
+            WorkShift arb15 = new WorkShift(15, date15, 3, "Preperations");
+            WorkShift arb16 = new WorkShift(16, date16, 3, "Guard-duty");
+            WorkShift arb17 = new WorkShift(17, date16, 2, "Guard-duty");
 
             list.Add(arb1);
             list.Add(arb2);
