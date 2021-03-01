@@ -191,7 +191,7 @@
                             {
                                 if (item.Date.Day == ViewBag.count)
                                 {
-                                    if (item.Shift == 1)
+                                    if (item.ShiftTypeId == 1)
                                     {
                                         <div class="day-shift col order-first">
                                             <div>
@@ -199,7 +199,7 @@
                                             </div>
                                         </div>
                                     }
-                                    else if (item.Shift == 2)
+                                    else if (item.ShiftTypeId == 2)
                                     {
                                         <div class="evening-shift col align-self-center">
                                             <div>
@@ -233,8 +233,8 @@
                                 <form method="post">
                                     <div class="modal-body">
                                         <input id="dateSelect" type="date" class="form-control mb-2" asp- asp-for="WorkShift.Date" value="@Model.dayData.ClickedFullDate.ToString("yyyy-MM-dd")" />
-                                        <select id="shiftSelect" class="custom-select mb-2" asp-for="WorkShift.Shift" asp-items="ViewBag.shiftList"></select>
-                                        <select id="taskSelect" class="custom-select" asp-for="WorkShift.Task" asp-items="ViewBag.taskList"></select>
+                                        <select id="shiftSelect" class="custom-select mb-2" asp-for="WorkShift.ShiftTypeId" asp-items="ViewBag.shiftList"></select>
+                                        <select id="taskSelect" class="custom-select" asp-for="WorkShift.TaskId" asp-items="ViewBag.taskList"></select>
                                     </div>
                                     <div class="modal-body">
                                         <hr />
@@ -255,8 +255,8 @@
                                                         {
                                                             <tr>
                                                                 <td>@item.Date.ToString("yyyy-MM-dd")</td>
-                                                                <td>@item.Shift</td>
-                                                                <td>@item.Task</td>
+                                                                <td>@item.ShiftTypeId</td>
+                                                                <td>@item.TaskId</td>
                                                                 <td><a asp-action="Delete" asp-controller="Home" asp-route-id="@item.Id"><img src="~/trash-fill.svg" /></a></td>
                                                             </tr>
                                                         }

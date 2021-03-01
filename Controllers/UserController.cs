@@ -136,11 +136,32 @@ namespace ClientLogIn.Controllers
         {
             if (ModelState.IsValid)
             {
-                var result = await _signInManager.PasswordSignInAsync(loginModel.Username, loginModel.Password, false, false);
-                if (result.Succeeded)
+                var user = await _userManager.FindByNameAsync(loginModel.Username);
+
+                if(user != null)
                 {
-                    return RedirectToAction("AdminProfile", "User");
+                    var result = await _signInManager.PasswordSignInAsync(loginModel.Username, loginModel.Password, false, false);
+                    if (result.Succeeded)
+                    {
+
+                        var roleList = await _userManager.GetRolesAsync(user);
+
+                        foreach(var item in roleList)
+                        {
+                            if(item == "SysAdmin")
+                            {
+                                return RedirectToAction("AdminProfile", "User");
+                            } else
+                            {
+                                return RedirectToAction("Index", "Profile");
+                            }
+                        }
+
+                        
+                    }
                 }
+
+               
                 ModelState.AddModelError("", "Invalid user login details");
             }
             return View(loginModel);

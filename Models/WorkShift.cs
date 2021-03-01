@@ -15,18 +15,7 @@ namespace ClientLogIn.Models
         public Task Task { get; set; }
         public int ShiftTypeId { get; set; }
         public ShiftType ShiftType { get; set; }
-        public WorkShift(int id, DateTime date, int shift, string task)
-        {
-            this.Id = id;
-            this.Date = date;
-            this.ShiftTypeId = shift;
-            this.TaskId = task;
-        }
 
-        public ArbetsPass()
-        {
-
-        }
     }
 
    
