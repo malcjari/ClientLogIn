@@ -20,6 +20,7 @@ namespace ClientLogIn.Controllers
         private readonly SignInManager<User> _signInManager;
         private readonly RoleManager<Role> _roleManager;
         private readonly MyContext _context;
+        private string errorMessage;
         public List<ArbetsPass> list = new List<ArbetsPass>();
 
         public Profile(UserManager<User> userManager,
@@ -149,6 +150,8 @@ namespace ClientLogIn.Controllers
         public IActionResult Delete(int id)
         {
             //list.Remove(list.Where(ws => ws.Id == id).FirstOrDefault());
+
+            
             return RedirectToAction("Index");
         }
 
@@ -157,8 +160,65 @@ namespace ClientLogIn.Controllers
         public IActionResult Add(ArbetsPass arbetspass)
         {
 
+            //_context.WorkShifts.Add(arbetspass)
+            //_context.SaveChanges();
             return RedirectToAction("Index");
         }
+
+
+        //Metod för ändring av lösenord
+        [HttpPost]
+        public async Task<IActionResult> ResetPassword(int id, string newPassword)
+        {
+
+            User user = await _userManager.FindByIdAsync(id.ToString());
+
+            var token = await _userManager.GeneratePasswordResetTokenAsync(user);
+
+            var result = await _userManager.ResetPasswordAsync(user, token, newPassword);
+
+            if (result.Succeeded)
+            {
+                return RedirectToAction("Index", "Profile");
+
+            } else
+            {
+                errorMessage = "Ändring av lösenordet misslyckades!";
+            }
+
+            return RedirectToAction("Index", "Profile");
+        }
+
+        //Metod för ändring av epost
+        [HttpPost]
+        public async Task<IActionResult> ResetEmail(int id,string newEmail)
+        {
+
+
+
+            var user = await _userManager.FindByIdAsync(id.ToString());
+
+            var emailExist = await _userManager.FindByEmailAsync(newEmail);
+
+
+
+            if(emailExist != null)
+            {
+                return RedirectToAction("Index", "Profile");
+            }
+
+            var token = await _userManager.GenerateChangeEmailTokenAsync(user, newEmail);
+
+            var result = await _userManager.ChangeEmailAsync(user, newEmail, token);
+
+            if (result.Succeeded)
+            {
+                return RedirectToAction("Index", "Profile");
+            }
+
+            return RedirectToAction("Index", "Profile");
+        }
+
 
         public int DateMapper(DateTime date, ViewModel viewModel)
         {
