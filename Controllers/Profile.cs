@@ -8,12 +8,12 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
-using WebApplication2.Models;
+using ClientLogIn.Models;
 
 namespace ClientLogIn.Controllers
 {
 
-    
+
     public class Profile : Controller
     {
         private readonly UserManager<User> _userManager;
@@ -34,7 +34,7 @@ namespace ClientLogIn.Controllers
             _context = context;
         }
         
-        public async Task<IActionResult> IndexAsync(DateTime iDate, int id)
+        public async Task<IActionResult> Index(DateTime iDate, int id)
         {
 
 
@@ -42,7 +42,6 @@ namespace ClientLogIn.Controllers
             ViewModel viewModel = new ViewModel();
             //Skapar alla WorkShift och lägger i viewModelListan
 
-            InitWorkShift(list);
             viewModel.WorkShiftList = list;
 
 
@@ -113,6 +112,9 @@ namespace ClientLogIn.Controllers
 
             return View(viewModel);
         }
+
+
+
         // Metod för ändnring av användarprofil
         public async Task<IActionResult> Editemployee(User user)
         {
@@ -147,23 +149,7 @@ namespace ClientLogIn.Controllers
         }
 
 
-        public IActionResult Delete(int id)
-        {
-            //list.Remove(list.Where(ws => ws.Id == id).FirstOrDefault());
 
-            
-            return RedirectToAction("Index");
-        }
-
-
-        [HttpPost]
-        public IActionResult Add(WorkShift WorkShift)
-        {
-
-            //_context.WorkShifts.Add(WorkShift)
-            //_context.SaveChanges();
-            return RedirectToAction("Index");
-        }
 
 
         //Metod för ändring av lösenord
@@ -188,6 +174,8 @@ namespace ClientLogIn.Controllers
 
             return RedirectToAction("Index", "Profile");
         }
+
+
 
         //Metod för ändring av epost
         [HttpPost]
@@ -219,6 +207,25 @@ namespace ClientLogIn.Controllers
             return RedirectToAction("Index", "Profile");
         }
 
+        //[Authorize(Roles = "SysAdmin")]
+        public IActionResult Delete(int id)
+        {
+            //list.Remove(list.Where(ws => ws.Id == id).FirstOrDefault());
+
+
+            return RedirectToAction("Index");
+        }
+
+
+        //[Authorize(Roles = "SysAdmin")]
+        [HttpPost]
+        public IActionResult Add(WorkShift WorkShift)
+        {
+
+            //_context.WorkShifts.Add(WorkShift)
+            //_context.SaveChanges();
+            return RedirectToAction("Index");
+        }
 
         public int DateMapper(DateTime date, ViewModel viewModel)
         {
@@ -258,7 +265,7 @@ namespace ClientLogIn.Controllers
                 case "Saturday":
                     number = 5;
                     break;
-                case "Sundday":
+                case "Sunday":
                     number = 6;
                     break;
             }
@@ -273,56 +280,7 @@ namespace ClientLogIn.Controllers
             return list;
         }
 
-        public void InitWorkShift(List<WorkShift> list)
-        {
-            DateTime date1 = new DateTime(2020, 2, 1);
-            DateTime date2 = new DateTime(2020, 2, 02);
-            DateTime date3 = new DateTime(2020, 2, 07);
-            DateTime date4 = new DateTime(2020, 2, 06);
-            DateTime date5 = new DateTime(2020, 2, 22);
-            DateTime date6 = new DateTime(2020, 2, 10);
-
-
-
-            WorkShift arb1 = new WorkShift(1, date1, 1, "Reception");
-            WorkShift arb2 = new WorkShift(2, date2, 1, "Cleaning");
-            WorkShift arb3 = new WorkShift(3, date3, 2, "Reception");
-            WorkShift arb4 = new WorkShift(4, date4, 2, "Preperations");
-            WorkShift arb5 = new WorkShift(5, date5, 3, "Preperations");
-            WorkShift arb6 = new WorkShift(6, date6, 3, "Guard-duty");
-            WorkShift arb7 = new WorkShift(7, date1, 2, "Guard-duty");
-
-            DateTime date11 = new DateTime(2020, 3, 1);
-            DateTime date12 = new DateTime(2020, 3, 03);
-            DateTime date13 = new DateTime(2020, 3, 12);
-            DateTime date14 = new DateTime(2020, 3, 01);
-            DateTime date15 = new DateTime(2020, 3, 01);
-            DateTime date16 = new DateTime(2020, 3, 24);
-
-
-            WorkShift arb11 = new WorkShift(11, date11, 1, "Reception");
-            WorkShift arb12 = new WorkShift(12, date12, 1, "Cleaning");
-            WorkShift arb13 = new WorkShift(13, date13, 2, "Reception");
-            WorkShift arb14 = new WorkShift(14, date14, 2, "Preperations");
-            WorkShift arb15 = new WorkShift(15, date15, 3, "Preperations");
-            WorkShift arb16 = new WorkShift(16, date16, 3, "Guard-duty");
-            WorkShift arb17 = new WorkShift(17, date16, 2, "Guard-duty");
-
-            list.Add(arb1);
-            list.Add(arb2);
-            list.Add(arb3);
-            list.Add(arb4);
-            list.Add(arb5);
-            list.Add(arb6);
-            list.Add(arb7);
-            list.Add(arb11);
-            list.Add(arb12);
-            list.Add(arb13);
-            list.Add(arb14);
-            list.Add(arb15);
-            list.Add(arb16);
-            list.Add(arb17);
-        }
+        
 
         public Dictionary<int, string> InitShiftList()
         {

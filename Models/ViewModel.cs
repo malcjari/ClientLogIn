@@ -3,13 +3,13 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using WebApplication2.Models;
+using ClientLogIn.Models;
 
 namespace ClientLogIn.Models
 {
     public class ViewModel
     {
-        public WorkShift workshift { get; set; }
+        public WorkShift WorkShift { get; set; }
 
         public List<WorkShift> WorkShiftList { get; set; }
 
@@ -20,7 +20,7 @@ namespace ClientLogIn.Models
 
         public ViewModel()
         {
-            this.workshift = new WorkShift();
+            this.WorkShift = new WorkShift();
             this.WorkShiftList = new List<WorkShift>();
             this.dayData = new DateDataModel();
             this.user = new User();
