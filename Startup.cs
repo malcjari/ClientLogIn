@@ -38,16 +38,16 @@ namespace ClientLogIn
                 options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"));
             });
 
-            services.AddAuthentication("CookieAuth")
-                .AddCookie("CookieAuth", config =>
-                {
+            //services.AddAuthentication("CookieAuth")
+            //    .AddCookie("CookieAuth", config =>
+            //    {
 
-                    config.Cookie.Name = "Cookie1";
-                    config.LoginPath = "Home/Index";
+            //        config.Cookie.Name = "Cookie1";
+            //        config.LoginPath = "Home/Index";
 
-                });
+            //    });
 
-            services.AddControllersWithViews();
+            //services.AddControllersWithViews();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
