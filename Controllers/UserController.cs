@@ -10,7 +10,7 @@ using Microsoft.AspNetCore.Authorization;
 
 
 namespace ClientLogIn.Controllers
-{
+{    [Authorize(Roles = "SysAdmin")]
     public class UserController : Controller
     {
         private readonly UserManager<User> _userManager;
@@ -30,7 +30,7 @@ namespace ClientLogIn.Controllers
         }
 
 
-        //[Authorize]
+        [Authorize(Roles= "SysAdmin")]
         [HttpGet]
         public IActionResult GetAllUsers()
         {
@@ -45,13 +45,13 @@ namespace ClientLogIn.Controllers
 
             return View(user);
         }
-
+        [Authorize(Roles = "SysAdmin")]
         [HttpGet]
         public IActionResult Create()
         {
             return View(); 
         }
-
+        [Authorize(Roles = "SysAdmin")]
         [HttpPost]
         public async Task<IActionResult> Create(User user)
         {
@@ -73,15 +73,15 @@ namespace ClientLogIn.Controllers
             
             return RedirectToAction(nameof(GetAllUsers));
         }
-        
 
+        [Authorize(Roles = "SysAdmin")]
         [HttpGet]
         public async Task<IActionResult> Edit(int id, User user)
         {
             var editUsr = await _userManager.FindByIdAsync(user.Id.ToString());
             return View(editUsr);
         }
-
+        [Authorize(Roles = "SysAdmin")]
         [HttpPost]
         public async Task<IActionResult> Edit(User user)
         {
@@ -104,7 +104,7 @@ namespace ClientLogIn.Controllers
             return RedirectToAction(nameof(GetAllUsers));
         }
 
-
+        [Authorize(Roles = "SysAdmin")]
         [HttpGet]
         public async Task<IActionResult> Delete(int id, User user)
         {
@@ -125,52 +125,52 @@ namespace ClientLogIn.Controllers
         }
 
 
-        [HttpGet]
-        public IActionResult Login()
-        {
-            return View();
-        }
+        //[HttpGet]
+        //public IActionResult Login()
+        //{
+        //    return View();
+        //}
 
-        [HttpPost]
-        public async Task<IActionResult> Login(LoginModel loginModel)
-        {
-            var s = await _userManager.FindByNameAsync("TestTest");
-            await _userManager.AddToRoleAsync(s,"Employee");
+        //[HttpPost]
+        //public async Task<IActionResult> Login(LoginModel loginModel)
+        //{
+        //    var s = await _userManager.FindByNameAsync("TestTest");
+        //    await _userManager.AddToRoleAsync(s,"Employee");
 
-            if (ModelState.IsValid)
-            {
-                var user = await _userManager.FindByNameAsync(loginModel.Username);
+        //    if (ModelState.IsValid)
+        //    {
+        //        var user = await _userManager.FindByNameAsync(loginModel.Username);
+        //        await _userManager.AddToRoleAsync(user, "SysAdmin");
+        //        if(user != null)
+        //        {
+        //            var result = await _signInManager.PasswordSignInAsync(loginModel.Username, loginModel.Password, false, false);
+        //            if (result.Succeeded)
+        //            {
 
-                if(user != null)
-                {
-                    var result = await _signInManager.PasswordSignInAsync(loginModel.Username, loginModel.Password, false, false);
-                    if (result.Succeeded)
-                    {
+        //                var roleList = await _userManager.GetRolesAsync(user);
 
-                        var roleList = await _userManager.GetRolesAsync(user);
-
-                        foreach(var item in roleList)
-                        {
-                            if(item == "SysAdmin")
-                            {
-                                return RedirectToAction("AdminProfile", "User");
-                            } else
-                            {
-                                return RedirectToAction("Index", "Profile");
-                            }
-                        }
+        //                foreach(var item in roleList)
+        //                {
+        //                    if(item == "SysAdmin")
+        //                    {
+        //                        return RedirectToAction("AdminProfile", "User");
+        //                    } else
+        //                    {
+        //                        return RedirectToAction("Index", "Profile");
+        //                    }
+        //                }
 
                         
-                    }
-                }
+        //            }
+        //        }
 
                
-                ModelState.AddModelError("", "Invalid user login details");
-            }
-            return View(loginModel);
-        }
+        //        ModelState.AddModelError("", "Invalid user login details");
+        //    }
+        //    return View(loginModel);
+        //}
 
-        [Authorize]
+   
         public IActionResult AdminProfile()
         {
             ViewBag.Msg = User.Identity.Name;
@@ -180,7 +180,7 @@ namespace ClientLogIn.Controllers
         public async Task<IActionResult> Logout()
         {
             await _signInManager.SignOutAsync();
-            return RedirectToAction("Login", "User");
+            return RedirectToAction("Login", "Login");
         }
 
 

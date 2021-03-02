@@ -39,7 +39,7 @@ namespace ClientLogIn
             });
 
 
-            services.ConfigureApplicationCookie(option => option.LoginPath = "/User/Login");
+            services.ConfigureApplicationCookie(option => option.LoginPath = "/Login/Login");
 
             services.AddControllersWithViews();
 
@@ -68,7 +68,7 @@ namespace ClientLogIn
             {
                 endpoints.MapControllerRoute(
                     name: "default",
-                    pattern: "{controller=Home}/{action=Index}/{id?}");
+                    pattern: "{controller=User}/{action=AdminProfile}/{id?}");
             });
         }
     }

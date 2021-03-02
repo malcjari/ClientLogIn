@@ -11,7 +11,6 @@ using System.Threading.Tasks;
 
 namespace ClientLogIn.Controllers
 {
-
     [Authorize]
     public class Profile : Controller
     {
@@ -40,11 +39,13 @@ namespace ClientLogIn.Controllers
             var activeUser = await _userManager.GetUserAsync(HttpContext.User);
             var isSysAdmin = await _userManager.IsInRoleAsync(activeUser, "SysAdmin");
 
-            if(isSysAdmin) {
+            if (isSysAdmin)
+            {
 
                 viewModel.user = await _userManager.FindByIdAsync(id.ToString());
 
-            } else
+            }
+            else
             {
                 viewModel.user = activeUser;
             }
@@ -67,7 +68,7 @@ namespace ClientLogIn.Controllers
             }
             else
             {
-                //Om inget datum har valts, körs denna med dagens datum. Detta är default
+                //Om inget datum har valts, körs denna med dagens datum.Detta är default
 
                 //Slänger in valt datum i DateMapper som plockar ut relevanta värden till viewModellen
                 DateTime date = new DateTime(DateTime.Now.Year, DateTime.Now.Month, 1);
@@ -82,10 +83,10 @@ namespace ClientLogIn.Controllers
 
             //Initierar och skapar select listor för formuläret
 
-            var shifts = _context.ShiftTypes.ToList();
-            var tasks = _context.Tasks.ToList();
-            SelectList shiftList = new SelectList(shifts, "Id", "Name");
-            SelectList taskList = new SelectList(tasks, "Id", "Name");
+            //var shifts = _context.ShiftTypes.ToList();
+            //var tasks = _context.Tasks.ToList();
+            //SelectList shiftList = new SelectList(shifts, "Id", "Name");
+            //SelectList taskList = new SelectList(tasks, "Id", "Name");
 
 
 
@@ -104,8 +105,8 @@ namespace ClientLogIn.Controllers
             //}
 
 
-            ViewBag.shiftList = shiftList;
-            ViewBag.taskList = taskList;
+            //ViewBag.shiftList = shiftList;
+            //ViewBag.taskList = taskList;
 
             return View(viewModel);
         }
@@ -143,7 +144,7 @@ namespace ClientLogIn.Controllers
 
             }
 
-            return RedirectToAction("Index");
+            return RedirectToAction("Index", new { id =user.Id} );
         }
 
 
