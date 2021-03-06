@@ -3,7 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using ClientLogIn.Models;
+
 
 namespace ClientLogIn.Models
 {
@@ -17,13 +17,14 @@ namespace ClientLogIn.Models
 
         public User user { get; set; }
 
-
+        public Role role { get; set; }
         public ViewModel()
         {
             this.WorkShift = new WorkShift();
             this.WorkShiftList = new List<WorkShift>();
             this.dayData = new DateDataModel();
             this.user = new User();
+            this.role = new Role();
         }
     }
 }

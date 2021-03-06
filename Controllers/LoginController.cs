@@ -72,5 +72,10 @@ namespace ClientLogIn.Controllers
             return View(loginModel);
         }
 
+        public async Task<IActionResult> Logout()
+        {
+            await _signInManager.SignOutAsync();
+            return RedirectToAction("Login", "Login");
+        }
     }
 }

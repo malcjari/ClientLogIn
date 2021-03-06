@@ -1,24 +1,111 @@
-﻿@using System.Security.Claims;
+﻿@model ClientLogIn.Models.ViewModel
+@*@using System.Security.Claims;
 @using Microsoft.AspNetCore.Identity;
-@inject SignInManager<User> _signInManager;
+@inject SignInManager<User> _signInManager;*@
 @{
     ViewData["Title"] = "AdminProfile";
 }
 
 <h1>AdminProfile</h1>
+<a asp-action="GetAllUsers">Employee list</a>
+<div class="container-fluid">
 
-<div class="card" style="width: 18rem;">
-    <img class="card-img-top" src="https://cutt.ly/jlLGMRZ" alt="Card image cap">
-    <div class="card-body">
-        <h5 class="card-title">@ViewBag.Msg</h5>
-        <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-        <a asp-action="GetAllUsers" class="btn btn-primary">Go somewhere</a>
+    <div id="profile-row" class="row mb-2">
+        <div class="col col-6">
+            <div class="card p-2">
+                <form id="profile-info-form" method="post">
+                    <div class="form-group">
+                        <label for="name-input">Namn</label>
+                        <input class="form-control" id="name-input" asp-for=user.Name disabled />
+                    </div>
+                    <div class="form-group">
+                        <label for="streetNo-input">Gata</label>
+                        <input class="form-control" id="streeNo-input" asp-for=user.StreetNo disabled />
+                    </div>
+                    <div class="form-group">
+                        <label for="zipCode-input">Postnummer</label>
+                        <input class="form-control" id="zipCode-input" asp-for=user.ZipCode disabled />
+                    </div>
+                    <div class="form-group">
+                        <label for="city-input">Stad</label>
+                        <input class="form-control" id="city-input" asp-for=user.City disabled />
+                    </div>
+                    <div class="form-group">
+                        <label for="phoneNumber-input">Telefon</label>
+                        <input class="form-control" id="phoneNumber-input" asp-for=user.PhoneNumber disabled />
+                    </div>
+                    <div class="form-group">
+                        <label for="email-input">E-post</label>
+                        <input type="email" class="form-control" id="email-input" asp-for=user.Email disabled />
+                    </div>
+                    <input hidden asp-for="user.Id" />
+                    <div>
+                        <button id="edit-toggle-popup" class="btn btn-info">Redigera </button>
+                        <button style="display:none;" id="Save-edit" asp-action="Edit" asp-route-User="@Model.user" class="btn btn-success">
+                            Spara
+                        </button>
+
+                    </div>
+                    <hr />
+                    <div class="form-group">
+                        <button id="toggle-password-btn" class="btn btn-info">Ändra Lösenord</button>
+                    </div>
+
+                </form>
+
+
+
+
+                @*<button id="toggle-email-btn" class="btn-info">Ändra Epost</button>
+                    <form id="reset-email-form">
+                        <label for=""></label>
+                        <input type="email" id="new-password-input" />
+                        <input type="email" id="new-password-input-again" />
+                        <button class="btn-outline-success" type="submit">Spara</button>
+                        <button class="btn-outline-danger">Avbryt</button>
+                    </form>*@
+
+            </div>
+
+
+        </div>
+
+        <div class="col col-6">
+            <div style="display:none;" class="card p-2" id="password-card">
+                <form id="reset-password-form" method="post">
+
+                    <div class="form-group">
+                        <label>Nuvarande Lösenord</label>
+                        <input class="form-control" type="password" id="old-password-input" />
+                    </div>
+
+                    <div class="form-group">
+                        <label>Nytt Lösenord</label>
+                        <input class="form-control" type="password" id="new-password-input" />
+                        <small class="form-text text-muted">Måste innehålla minst 8 tecken varav minst en stor bokstav och minst en siffra!</small>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Upprepa Lösenord</label>
+                        <input class="form-control" type="password" id="new-password-input-again" />
+                        <small class="form-text text-muted">Upprepa nytt lösenord</small>
+                    </div>
+
+                    <div class="form-group">
+                        <button class="btn btn-outline-success" type="submit">Spara</button>
+                        <button class="btn btn-outline-danger">Avbryt</button>
+                    </div>
+
+                </form>
+            </div>
+        </div>
+
     </div>
 </div>
-
-@if(_signInManager.IsSignedIn(User))
+<br/>
+@if(User.Identity.IsAuthenticated)
 {
-    <form method="post" asp-controller="User" asp-action="Logout">
+    <form method="post" asp-controller="Login" asp-action="Logout">
         <input type="submit" value="Logout" />
     </form>
     
