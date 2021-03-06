@@ -7,10 +7,10 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
-
+using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace ClientLogIn.Controllers
-{
+{    [Authorize(Roles = "SysAdmin")]
     public class UserController : Controller
     {
         private readonly UserManager<User> _userManager;
@@ -30,12 +30,12 @@ namespace ClientLogIn.Controllers
         }
 
 
-        //[Authorize]
+        [Authorize(Roles= "SysAdmin")]
         [HttpGet]
         public IActionResult GetAllUsers()
         {
-
-            var returnList = _context.Users.ToList();
+            var Id = _userManager.GetUserId(HttpContext.User);
+            var returnList = _context.Users.Where(s => s.Id.ToString() != Id).ToList();
             return View(returnList);
         }
 
@@ -45,47 +45,65 @@ namespace ClientLogIn.Controllers
 
             return View(user);
         }
-
+        [Authorize(Roles = "SysAdmin")]
         [HttpGet]
         public IActionResult Create()
         {
-            return View(); 
+            ViewModel v = new ViewModel();
+            List<Role> roles = _context.Roles.ToList();
+            ViewBag.selectrole = new SelectList(roles, "Name", "Name" );
+            return View(v); 
         }
-
+        [Authorize(Roles = "SysAdmin")]
         [HttpPost]
-        public async Task<IActionResult> Create(User user)
+        public async Task<IActionResult> Create(ViewModel viewModel)
         {
-            var userExist = await _userManager.FindByNameAsync(user.UserName);
+            var userExist = await _userManager.FindByNameAsync(viewModel.user.UserName);
+  
             if(userExist != null)
             {
+
                 ViewBag.usrExist = "User already exists, login";
             }
             else
             {
-                var createUser = await _userManager.CreateAsync(user, user.PasswordHash);
-                var addToRole = await _userManager.AddToRoleAsync(user, "SysAdmin");
-                
+                var createUser = await _userManager.CreateAsync(viewModel.user, viewModel.user.PasswordHash);
+                var user = await _userManager.FindByNameAsync(viewModel.user.UserName);
+                var resultat = await _userManager.AddToRoleAsync(user, viewModel.role.Name);
                 if (createUser.Succeeded)
                 {
-                    ViewBag.successMsg = "User Successfully created";
+                    if (resultat.Succeeded)
+                    {
+                        ViewBag.successMsg = "User Successfully created";
+                    }
+                    else
+                    {
+                        ViewBag.failMsg = "User misslyckad";
+                        return RedirectToAction("Create");
+                    }
+                }
+                else
+                {
+                    return RedirectToAction("Create");
                 }
             }
             
-            return RedirectToAction(nameof(GetAllUsers));
+            return RedirectToAction("GetAllUsers");
         }
-        
 
+        [Authorize(Roles = "SysAdmin")]
         [HttpGet]
         public async Task<IActionResult> Edit(int id, User user)
         {
             var editUsr = await _userManager.FindByIdAsync(user.Id.ToString());
             return View(editUsr);
         }
-
+        [Authorize(Roles = "SysAdmin")]
         [HttpPost]
         public async Task<IActionResult> Edit(User user)
         {
-            var editUsr = await _userManager.FindByIdAsync(user.Id.ToString());
+
+            var editUsr = await _userManager.GetUserAsync(HttpContext.User);
             editUsr.Name = user.Name;
             editUsr.StreetNo = user.StreetNo;
             editUsr.City = user.City;
@@ -101,10 +119,10 @@ namespace ClientLogIn.Controllers
             {
                 ViewBag.Error = "Something went wrong.";
             }
-            return RedirectToAction(nameof(GetAllUsers));
+            return RedirectToAction("AdminProfile");
         }
 
-
+        [Authorize(Roles = "SysAdmin")]
         [HttpGet]
         public async Task<IActionResult> Delete(int id, User user)
         {
@@ -125,63 +143,27 @@ namespace ClientLogIn.Controllers
         }
 
 
-        [HttpGet]
-        public IActionResult Login()
-        {
-            return View();
-        }
+  
 
-        [HttpPost]
-        public async Task<IActionResult> Login(LoginModel loginModel)
-        {
-            var s = await _userManager.FindByNameAsync("TestTest");
-            await _userManager.AddToRoleAsync(s,"Employee");
-
-            if (ModelState.IsValid)
-            {
-                var user = await _userManager.FindByNameAsync(loginModel.Username);
-
-                if(user != null)
-                {
-                    var result = await _signInManager.PasswordSignInAsync(loginModel.Username, loginModel.Password, false, false);
-                    if (result.Succeeded)
-                    {
-
-                        var roleList = await _userManager.GetRolesAsync(user);
-
-                        foreach(var item in roleList)
-                        {
-                            if(item == "SysAdmin")
-                            {
-                                return RedirectToAction("AdminProfile", "User");
-                            } else
-                            {
-                                return RedirectToAction("Index", "Profile");
-                            }
-                        }
-
-                        
-                    }
-                }
-
-               
-                ModelState.AddModelError("", "Invalid user login details");
-            }
-            return View(loginModel);
-        }
-
-        [Authorize]
+   
         public IActionResult AdminProfile()
         {
+            ViewModel v = new ViewModel();
             ViewBag.Msg = User.Identity.Name;
-            return View();
+
+          var Userid = _userManager.GetUserId(HttpContext.User);
+           
+           
+           
+          v.user  = _userManager.FindByIdAsync(Userid).Result;
+          return View(v);
+            
+
+           
+            
         }
 
-        public async Task<IActionResult> Logout()
-        {
-            await _signInManager.SignOutAsync();
-            return RedirectToAction("Login", "User");
-        }
+      
 
 
         public IActionResult CreateRole()
