@@ -36,27 +36,6 @@ namespace ClientLogIn.Controllers
         {
             ViewModel viewModel = new ViewModel();
 
-            var activeUser = await _userManager.GetUserAsync(HttpContext.User);
-            var isSysAdmin = await _userManager.IsInRoleAsync(activeUser, "SysAdmin");
-
-            if (isSysAdmin)
-            {
-
-                viewModel.user = await _userManager.FindByIdAsync(id.ToString());
-
-            }
-            else
-            {
-                viewModel.user = activeUser;
-            }
-
-
-            ViewBag.userId = 2;
-
-
-            ViewBag.count = 0;
-
-
             //Om ett datum skickas med i metoden körs detta
             if (iDate.Year != 0001)
             {
@@ -76,37 +55,48 @@ namespace ClientLogIn.Controllers
                 viewModel.dayData.FirstDayOfWeek = DateMapper(date, viewModel);
             }
 
-            //Hämtar och Sorterar WorkShift efer aktiv månad
-            viewModel.WorkShiftList = _context.WorkShifts.Where(ap => ap.Date.Month == viewModel.dayData.Month).ToList();
+            var activeUser = await _userManager.GetUserAsync(HttpContext.User);
+            var isSysAdmin = await _userManager.IsInRoleAsync(activeUser, "SysAdmin");
 
+            if (isSysAdmin)
+            {
+
+                viewModel.user = await _userManager.FindByIdAsync(id.ToString());
+
+                viewModel.WorkShiftList = _context.WorkShifts.Where(ap => ap.Date.Month == viewModel.dayData.Month).ToList();
+
+                viewModel.WorkShiftList = viewModel.WorkShiftList.Where(ap => ap.UserId == viewModel.user.Id).ToList();
+            }
+            else
+            {
+
+                viewModel.user = activeUser;
+
+                //Hämtar och Sorterar WorkShift efer aktiv månad
+                viewModel.WorkShiftList = _context.WorkShifts.Where(ap => ap.Date.Month == viewModel.dayData.Month).ToList();
+
+                viewModel.WorkShiftList = viewModel.WorkShiftList.Where(ap => ap.UserId == activeUser.Id).ToList();
+            }
+
+
+            //ViewBag.userId = viewModel.user.Id;
+
+            ViewBag.userId = viewModel.user.Id;
+            ViewBag.count = 0;
 
 
             //Initierar och skapar select listor för formuläret
 
-            //var shifts = _context.ShiftTypes.ToList();
-            //var tasks = _context.Tasks.ToList();
-            //SelectList shiftList = new SelectList(shifts, "Id", "Name");
-            //SelectList taskList = new SelectList(tasks, "Id", "Name");
+            var shifts = _context.ShiftTypes.ToList();
+            var tasks = _context.Tasks.ToList();
+            SelectList shiftList = new SelectList(shifts, "Id", "Name");
+            SelectList taskList = new SelectList(tasks, "Id", "Name");
 
 
 
 
-
-
-            //var Userid = _userManager.GetUserId(HttpContext.User);
-            //if (Userid == null)
-            //{
-            //    RedirectToAction("Loginsidan");
-            //}
-            //else
-            //{
-            //    User _user = _userManager.FindByIdAsync(Userid).Result;
-            //    return View(_user);
-            //}
-
-
-            //ViewBag.shiftList = shiftList;
-            //ViewBag.taskList = taskList;
+            ViewBag.shiftList = shiftList;
+            ViewBag.taskList = taskList;
 
             return View(viewModel);
         }
@@ -204,26 +194,26 @@ namespace ClientLogIn.Controllers
             return RedirectToAction("Index", "Profile");
         }
 
-        //[Authorize(Roles = "SysAdmin")]
+        [Authorize(Roles = "SysAdmin")]
         public IActionResult Delete(int id)
         {
             WorkShift w = _context.WorkShifts.Find(id);
             _context.Remove(w);
             _context.SaveChanges();
-            //list.Remove(list.Where(ws => ws.Id == id).FirstOrDefault());
+            
 
 
-            return RedirectToAction("Index");
+            return RedirectToAction("Index", new { id = w.UserId});
         }
 
 
-        //[Authorize(Roles = "SysAdmin")]
+        [Authorize(Roles = "SysAdmin")]
         [HttpPost]
         public IActionResult Add(WorkShift WorkShift)
         {
             _context.WorkShifts.Add(WorkShift);
             _context.SaveChanges();
-            return RedirectToAction("Index");
+            return RedirectToAction("Index", new { id = WorkShift.UserId});
         }
 
         public int DateMapper(DateTime date, ViewModel viewModel)

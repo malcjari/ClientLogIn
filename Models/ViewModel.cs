@@ -18,6 +18,8 @@ namespace ClientLogIn.Models
         public User user { get; set; }
 
         public Role role { get; set; }
+
+        public string newPassword { get; set; }
         public ViewModel()
         {
             this.WorkShift = new WorkShift();
@@ -25,6 +27,7 @@ namespace ClientLogIn.Models
             this.dayData = new DateDataModel();
             this.user = new User();
             this.role = new Role();
+            this.newPassword = "";
         }
     }
 }
