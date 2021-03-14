@@ -20,6 +20,8 @@ namespace ClientLogIn.Models
         public Role role { get; set; }
 
         public string newPassword { get; set; }
+
+        public string newPasswordRepeat { get; set; }
         public ViewModel()
         {
             this.WorkShift = new WorkShift();

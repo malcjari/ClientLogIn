@@ -1,10 +1,12 @@
 ﻿@model ClientLogIn.Models.ViewModel
-
 @*
     For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 *@
 @{
 }
+<span style="background-color: red; font-size: larger">@Html.ValidationMessage("success")</span>
+@Html.ValidationSummary(true, "")
+<span>@ViewBag.changePwdFailed</span>
 
 <div class="container">
 
@@ -16,7 +18,9 @@
 
     @if (User.Identity.IsAuthenticated)
     {
+
         <form method="post" asp-controller="Login" asp-action="Logout">
+
             <input type="submit" value="Logout" />
         </form>
 
@@ -63,6 +67,7 @@
                     <div class="form-group">
                         <button id="toggle-password-btn" class="btn btn-info">Ändra Lösenord</button>
                     </div>
+                    <div></div>
 
                 </form>
 
@@ -84,6 +89,7 @@
         </div>
 
         <div class="col col-6">
+
             <div style="display:none;" class="card p-2" id="password-card">
                 <form id="reset-password-form" method="post">
 
@@ -94,18 +100,18 @@
 
                     <div class="form-group">
                         <label>Nytt Lösenord</label>
-                        <input class="form-control" type="password" id="new-password-input" />
+                        <input name="newPassword" asp-for="@Model.newPassword" class="form-control" type="password" id="new-password-input" />
                         <small class="form-text text-muted">Måste innehålla minst 8 tecken varav minst en stor bokstav och minst en siffra!</small>
                     </div>
 
                     <div class="form-group">
                         <label>Upprepa Lösenord</label>
-                        <input asp-for="newPassword" class="form-control" type="password" id="new-password-input-again" />
+                        <input name="newPasswordRepeat" asp-for="@Model.newPasswordRepeat" class="form-control" type="password" id="new-password-input-again" />
                         <small class="form-text text-muted">Upprepa nytt lösenord</small>
                     </div>
-
+                    <input hidden asp-for="@Model.user.Id" value="@Model.user.Id" />
                     <div class="form-group">
-                        <button asp-action="ResetPassword" asp-route-newPassword="newPassword" class="btn btn-outline-success" type="submit">Spara</button>
+                        <button asp-action="ResetPassword" class="btn btn-outline-success" type="submit">Spara</button>
                         <button class="btn btn-outline-danger">Avbryt</button>
                     </div>
 

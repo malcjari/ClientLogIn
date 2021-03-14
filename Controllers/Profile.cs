@@ -18,7 +18,6 @@ namespace ClientLogIn.Controllers
         private readonly SignInManager<User> _signInManager;
         private readonly RoleManager<Role> _roleManager;
         private readonly MyContext _context;
-        private string errorMessage;
         public List<WorkShift> list = new List<WorkShift>();
 
         public Profile(UserManager<User> userManager,
@@ -143,22 +142,26 @@ namespace ClientLogIn.Controllers
 
         //Metod för ändring av lösenord
         [HttpPost]
-        public async Task<IActionResult> ResetPassword(int id, string newPassword)
+        public async Task<IActionResult> ResetPassword(ViewModel viewModel)
         {
 
-            User user = await _userManager.FindByIdAsync(id.ToString());
+            User user = await _userManager.FindByIdAsync(viewModel.user.Id.ToString());
 
             var token = await _userManager.GeneratePasswordResetTokenAsync(user);
 
-            var result = await _userManager.ResetPasswordAsync(user, token, newPassword);
+            var result = await _userManager.ResetPasswordAsync(user, token, viewModel.newPassword);
 
             if (result.Succeeded)
             {
+                
                 return RedirectToAction("Index", "Profile");
+                
 
             } else
             {
-                errorMessage = "Ändring av lösenordet misslyckades!";
+                ViewBag.changePwdFailed = "Password Successfully NOT Changed";
+                ModelState.AddModelError("", "Password Change Failed!");
+                ModelState.AddModelError("success", "Password Successfully NOT Changed");
             }
 
             return RedirectToAction("Index", "Profile");
