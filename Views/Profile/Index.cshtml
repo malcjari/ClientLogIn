@@ -5,16 +5,37 @@
 @{
 }
 <span style="background-color: red; font-size: larger">@Html.ValidationMessage("success")</span>
+
 @Html.ValidationSummary(true, "")
+
 <span>@ViewBag.changePwdFailed</span>
 
+
+
+
+
+
+@if (User.IsInRole("SysAdmin"))
+{
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a asp-action="AdminProfile" asp-controller="User">Profil</a></li>
+            <li class="breadcrumb-item"><a asp-action="GetAllUsers" asp-controller="User">Alla Användare</a></li>
+            <li class="breadcrumb-item active" aria-current="page"><a href="#">Användare</a></li>
+        </ol>
+    </nav>
+    <h1>@Model.user.UserName</h1>
+
+}
+else
+{
+    <h1>Min Sida</h1>
+
+}
+<h1></h1>
 <div class="container">
 
 
-    @if (User.IsInRole("SysAdmin"))
-    {
-        <h2>SysAdmin</h2>
-    }
 
     @if (User.Identity.IsAuthenticated)
     {
@@ -129,7 +150,7 @@
     @*Calendar rad*@
     <div id="calendar-row" class="row">
 
-        <div id="calendar" class="container">
+        <div id="calendar" class="card container">
             <div id="calendar-header" style="text-align:center">
                 <div id="calendar-header-title">
                     <h4>@Model.dayData.MonthName</h4>

@@ -160,7 +160,9 @@ namespace ClientLogIn.Controllers
             } else
             {
                 ViewBag.changePwdFailed = "Password Successfully NOT Changed";
+
                 ModelState.AddModelError("", "Password Change Failed!");
+
                 ModelState.AddModelError("success", "Password Successfully NOT Changed");
             }
 

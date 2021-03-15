@@ -3,8 +3,13 @@
 @{
     ViewData["Title"] = "GetAllUsers";
 }
-
-<h1>GetAllUsers</h1>
+<nav aria-label="breadcrumb">
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a asp-action="AdminProfile" asp-controller="User">Profil</a></li>
+        <li class="breadcrumb-item active"  aria-current="page"><a href="#">Alla Användare</a></li>
+    </ol>
+</nav>
+<h1>Alla Användare</h1>
 
 <p>
     <a class="btn btn-primary" asp-action="Create">Create New</a>

@@ -5,9 +5,14 @@
 @{
     ViewData["Title"] = "AdminProfile";
 }
-
+<nav aria-label="breadcrumb">
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item active"  aria-current="page"><a href="#">Profil</a></li>
+    </ol>
+</nav>
 <h1>AdminProfile</h1>
 <a asp-action="GetAllUsers">Employee list</a>
+
 <div class="container-fluid">
 
     <div id="profile-row" class="row mb-2">
