@@ -159,14 +159,20 @@ namespace ClientLogIn.Controllers
 
             } else
             {
+
+                foreach(var error in result.Errors)
+                {
+                    ModelState.AddModelError("failedpwd", error.Description);
+                }
+
                 ViewBag.changePwdFailed = "Password Successfully NOT Changed";
 
-                ModelState.AddModelError("", "Password Change Failed!");
+                
 
                 ModelState.AddModelError("success", "Password Successfully NOT Changed");
             }
 
-            return RedirectToAction("Index", "Profile");
+            return RedirectToAction("Index", "Profile", new { id = user.Id});
         }
 
 
