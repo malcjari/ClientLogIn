@@ -10,8 +10,8 @@
         <li class="breadcrumb-item active"  aria-current="page"><a href="#">Profil</a></li>
     </ol>
 </nav>
-<h1>AdminProfile</h1>
-<a asp-action="GetAllUsers">Employee list</a>
+<h1>System Administratör</h1>
+
 
 <div class="container-fluid">
 
@@ -110,9 +110,7 @@
 <br/>
 @if(User.Identity.IsAuthenticated)
 {
-    <form method="post" asp-controller="Login" asp-action="Logout">
-        <input type="submit" value="Logout" />
-    </form>
+
     
 }
 

@@ -25,17 +25,39 @@
                     <ul class="navbar-nav flex-grow-1">
 
                         <li class="nav-item">
-                            <a class="nav-link text-dark" style="font-weight:bold" href="http://193.10.202.81/Seasharp">BOKA RUM</a>
+                            <a class="nav-link" style="font-weight:bold;" href="http://193.10.202.81/Seasharp">BOKA RUM</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-dark" style="font-weight:bold" href="http://193.10.202.78/GuestWebSite">GÄST</a>
+                            <a class="nav-link" style="font-weight:bold" href="http://193.10.202.78/GuestWebSite">GÄST</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-dark" style="font-weight:bold" href="http://193.10.202.77/KonferensrumSida ">KONFERENSRUM</a>
+                            <a class="nav-link" style="font-weight:bold" href="http://193.10.202.77/KonferensrumSida ">KONFERENSRUM</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-dark" style="font-weight:bold" href="http://informatik12.ei.hv.se/resakt">RESTURANG/AKTIVITETER</a>
+                            <a class="nav-link" style="font-weight:bold" href="http://informatik12.ei.hv.se/resakt">RESTURANG/AKTIVITETER</a>
                         </li>
+                        @if(User.IsInRole("SysAdmin")){
+
+                        <li class="nav-item">
+                            <div class="dropdown">
+                                <div class="dropdown-content">
+                                    <a asp-controller="User" asp-action="AdminProfile">Min Sida</a>
+                                    <a asp-controller="User" asp-action="GetAllUsers">Användare</a>
+                                    <a asp-controller="User" asp-action="Create">Skapa Användare</a>
+                                </div>
+                            </div>
+                            <a class="nav-link" style="font-weight:bold">SYSTEM ADMINISTRATÖR</a>
+
+                            
+                        </li>
+                        }
+
+                        @if(User.Identity.IsAuthenticated){
+
+                        <li class="nav-item">
+                            <a class="nav-link" style="font-weight:bold" asp-controller="Login" asp-action="Logout">Logga ut</a>
+                        </li>
+                        }
 
                     </ul>
                 </div>
@@ -43,7 +65,7 @@
         </nav>
     </header>
     <div class="container">
-        <main role="main" class="card pb-3">
+        <main role="main" class="pb-3">
             @RenderBody()
         </main>
     </div>

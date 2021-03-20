@@ -18,7 +18,7 @@
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.Name)
+                Namn
             </th>
             @*<th>
                 @Html.DisplayNameFor(model => model.StreetNo)
@@ -30,10 +30,10 @@
                 @Html.DisplayNameFor(model => model.ZipCode)
             </th>*@
             <th>
-                @Html.DisplayNameFor(model => model.UserName)
+                Användarnamn
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Email)
+                E-post
             </th>
             @*<th>
                 @Html.DisplayNameFor(model => model.PhoneNumber)
@@ -69,7 +69,7 @@
             <td>
                 @*<a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |*@
                 <a asp-controller="Profile" asp-action="Index" asp-route-id="@item.Id">Profil</a> |
-                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+                <a asp-action="Delete" asp-route-id="@item.Id">Radera</a>
             </td>
         </tr>
 }
