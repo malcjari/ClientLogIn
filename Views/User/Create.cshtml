@@ -3,83 +3,77 @@
 @{
     ViewData["Title"] = "Create";
 }
-<nav aria-label="breadcrumb">
-    <ol class="breadcrumb">
-        <li class="breadcrumb-item"><a asp-action="AdminProfile" asp-controller="User">Profil</a></li>
-        <li class="breadcrumb-item"><a asp-action="GetAllUsers" asp-controller="User">Alla Användare</a></li>
-        <li class="breadcrumb-item active" aria-current="page"><a href="#">Ny Användare</a></li>
-    </ol>
-</nav>
+<div class="card">
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a asp-action="AdminProfile" asp-controller="User">Profil</a></li>
+            <li class="breadcrumb-item"><a asp-action="GetAllUsers" asp-controller="User">Alla Användare</a></li>
+            <li class="breadcrumb-item active" aria-current="page"><a href="#">Ny Användare</a></li>
+        </ol>
+    </nav>
 
-<h1>Ny Användare</h1>
+    <h1 class="text-center">Skapa Ny Användare</h1>
+    <div class="row">
+        <div class="col-md-4 col-lg-6 offset-3">
+            <form asp-action="Create" method="post">
+                <div class="form-group">
+                    <label class="control-label"></label>
+                    <select class="custom-select" asp-for="role.Name" asp-items="@ViewBag.selectrole"></select>
+                </div>
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <div class="form-group">
+                    <label asp-for="user.Name" class="control-label">Användarnamn</label>
+                    <input asp-for="user.Name" type="text" class="form-control" />
+                    <span asp-validation-for="user.Name" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="user.StreetNo" class="control-label">Gata</label>
+                    <input asp-for="user.StreetNo" class="form-control" />
+                    <span asp-validation-for="user.StreetNo" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="user.City" class="control-label">Ort</label>
+                    <input asp-for="user.City" class="form-control" />
+                    <span asp-validation-for="user.City" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="user.ZipCode" class="control-label">Postnummer</label>
+                    <input asp-for="user.ZipCode" class="form-control" />
+                    <span asp-validation-for="user.ZipCode" class="text-danger"></span>
+                </div>
 
-<h4>Användare</h4>
-<hr />
-<div class="row">
-    <div class="col-md-4">
-        <form asp-action="Create" method="post">
-            <div class="form-group">
-                <label class="control-label"></label>
-                <select class="custom-select" asp-for="role.Name" asp-items="@ViewBag.selectrole"></select>
-            </div>
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <div class="form-group">
-                <label asp-for="user.Name" class="control-label">Användarnamn</label>
-                <input asp-for="user.Name" type="text" class="form-control" />
-                <span asp-validation-for="user.Name" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="user.StreetNo" class="control-label">Gata</label>
-                <input asp-for="user.StreetNo" class="form-control" />
-                <span asp-validation-for="user.StreetNo" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="user.City" class="control-label">Ort</label>
-                <input asp-for="user.City" class="form-control" />
-                <span asp-validation-for="user.City" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="user.ZipCode" class="control-label">Postnummer</label>
-                <input asp-for="user.ZipCode" class="form-control" />
-                <span asp-validation-for="user.ZipCode" class="text-danger"></span>
-            </div>
+                <div class="form-group">
+                    <label asp-for="user.Email" class="control-label">Epost</label>
+                    <input asp-for="user.Email" type="email" class="form-control" />
+                    <span asp-validation-for="user.Email" class="text-danger"></span>
+                </div>
 
-            <div class="form-group">
-                <label asp-for="user.Email" class="control-label">Epost</label>
-                <input asp-for="user.Email" type="email" class="form-control" />
-                <span asp-validation-for="user.Email" class="text-danger"></span>
-            </div>
+                <div class="form-group">
+                    <label asp-for="user.PhoneNumber" class="control-label">Telefon</label>
+                    <input asp-for="user.PhoneNumber" class="form-control" />
+                    <span asp-validation-for="user.PhoneNumber" class="text-danger"></span>
+                </div>
 
-            <div class="form-group">
-                <label asp-for="user.PhoneNumber" class="control-label">Telefon</label>
-                <input asp-for="user.PhoneNumber" class="form-control" />
-                <span asp-validation-for="user.PhoneNumber" class="text-danger"></span>
-            </div>
+                <div class="form-group">
+                    <label asp-for="user.UserName" class="control-label">Användarnamn</label>
+                    <input asp-for="user.UserName" class="form-control" />
+                    <span asp-validation-for="user.UserName" class="text-danger"></span>
+                </div>
 
-            <div class="form-group">
-                <label asp-for="user.UserName" class="control-label">Användarnamn</label>
-                <input asp-for="user.UserName" class="form-control" />
-                <span asp-validation-for="user.UserName" class="text-danger"></span>
-            </div>
-
-            <div class="form-group">
-                <label asp-for="user.PasswordHash" class="control-label">Lösenord</label>
-                <input asp-for="user.PasswordHash" type="password" class="form-control" />
-                @*<span asp-validation-for="user.PasswordHash" class="text-danger"></span>*@
-            </div>
+                <div class="form-group">
+                    <label asp-for="user.PasswordHash" class="control-label">Lösenord</label>
+                    <input asp-for="user.PasswordHash" type="password" class="form-control" />
+                    @*<span asp-validation-for="user.PasswordHash" class="text-danger"></span>*@
+                </div>
 
 
-            <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-primary" />
-            </div>
-        </form>
+                <div class="form-group">
+                    <input type="submit" value="Skapa" class="btn btn-primary" />
+                </div>
+            </form>
+        </div>
     </div>
 </div>
-
-<div>
-    <a asp-action="Index">Back to List</a>
-</div>
-
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
 }

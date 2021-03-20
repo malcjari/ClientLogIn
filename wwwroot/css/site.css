@@ -6,7 +6,6 @@
 body {
     background-size: cover;
     background-image: url(http://193.10.202.77/images/hotelbilden.jpg);
-    background-color: red;
 }
 
 .calendar-cell {
@@ -98,4 +97,9 @@ table {
 
 .dropdown:hover .dropdown-content {
     display: block;
+}
+
+.center-div{
+
+    margin: 0 auto;
 }

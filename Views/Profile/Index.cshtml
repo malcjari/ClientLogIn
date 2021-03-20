@@ -15,41 +15,31 @@
 
 
 
-@if (User.IsInRole("SysAdmin"))
-{
-    <nav aria-label="breadcrumb">
-        <ol class="breadcrumb">
-            <li class="breadcrumb-item"><a asp-action="AdminProfile" asp-controller="User">Profil</a></li>
-            <li class="breadcrumb-item"><a asp-action="GetAllUsers" asp-controller="User">Alla Användare</a></li>
-            <li class="breadcrumb-item active" aria-current="page"><a href="#">Användare</a></li>
-        </ol>
-    </nav>
-    <h1>@Model.user.UserName</h1>
 
-}
-else
-{
-    <h1>Min Sida</h1>
-
-}
 <h1></h1>
-<div class="container">
+<div class="container card">
 
-
-
-    @if (User.Identity.IsAuthenticated)
+    @if (User.IsInRole("SysAdmin"))
     {
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a asp-action="AdminProfile" asp-controller="User">Profil</a></li>
+                <li class="breadcrumb-item"><a asp-action="GetAllUsers" asp-controller="User">Alla Användare</a></li>
+                <li class="breadcrumb-item active" aria-current="page"><a href="#">Användare</a></li>
+            </ol>
+        </nav>
+        <h1 class="text-center">@Model.user.UserName</h1>
 
-        <form method="post" asp-controller="Login" asp-action="Logout">
-
-            <input type="submit" value="Logout" />
-        </form>
+    }
+    else
+    {
+        <h1 class="text-center">Min Sida</h1>
 
     }
 
     @*Profil rad*@
     <div id="profile-row" class="row mb-2">
-        <div class="col col-6">
+        <div class="col col-6 offset-3">
             <div class="card p-2">
                 <form id="profile-info-form" method="post">
                     <div class="form-group">
@@ -92,24 +82,12 @@ else
 
                 </form>
 
-
-
-
-                @*<button id="toggle-email-btn" class="btn-info">Ändra Epost</button>
-                    <form id="reset-email-form">
-                        <label for=""></label>
-                        <input type="email" id="new-password-input" />
-                        <input type="email" id="new-password-input-again" />
-                        <button class="btn-outline-success" type="submit">Spara</button>
-                        <button class="btn-outline-danger">Avbryt</button>
-                    </form>*@
-
             </div>
 
 
         </div>
 
-        <div class="col col-6">
+        <div class="col col-6 offset-3 my-1">
 
             <div style="display:none;" class="card p-2" id="password-card">
                 <form id="reset-password-form" method="post">
@@ -142,15 +120,15 @@ else
 
     </div>
 
+    <hr />
 
 
 
-
-
+    <h2 class="text-center">SCHEMA</h2>
     @*Calendar rad*@
     <div id="calendar-row" class="row">
 
-        <div id="calendar" class="card container">
+        <div id="calendar" class="container">
             <div id="calendar-header" style="text-align:center">
                 <div id="calendar-header-title">
                     <h4>@Model.dayData.MonthName</h4>
