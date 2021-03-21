@@ -20,18 +20,20 @@ namespace ClientLogIn.Controllers
         private readonly RoleManager<Role> _roleManager;
         private readonly MyContext _context;
         public List<WorkShift> list = new List<WorkShift>();
-        private readonly ILogger<Profile> ilogger;
+        private readonly ILogger<Profile> _logger;
 
 
         public Profile(UserManager<User> userManager,
             SignInManager<User> signInManager,
             RoleManager<Role> roleManager,
-            MyContext context)
+            MyContext context,
+            ILogger<Profile> logger)
         {
             _userManager = userManager;
             _signInManager = signInManager;
             _roleManager = roleManager;
             _context = context;
+            _logger = logger;
         }
 
         public async Task<IActionResult> Index(DateTime iDate, int id)
@@ -108,9 +110,11 @@ namespace ClientLogIn.Controllers
             catch (Exception e)
             {
 
-                Console.WriteLine(e);
+                _logger.LogError(e.Message);
+                return RedirectToAction("GetAllUsers", "User");
             }
-            return View();
+
+            
         }
 
 
@@ -154,7 +158,7 @@ namespace ClientLogIn.Controllers
             catch (Exception e)
             {
 
-                Console.WriteLine(e);
+                _logger.LogError(e.Message);
             }
             return View();
 
@@ -202,10 +206,11 @@ namespace ClientLogIn.Controllers
             catch (Exception e)
             {
 
-                Console.WriteLine(e);
+                _logger.LogError(e.Message);
 
             }
-            return View();
+
+            return RedirectToAction("Index", "Profile", new { id = viewModel.user.Id });
         }
 
 
@@ -241,7 +246,7 @@ namespace ClientLogIn.Controllers
             catch (Exception e)
             {
 
-                Console.WriteLine(e);
+                _logger.LogError(e.Message);
             }
             return View();
         }
@@ -261,7 +266,7 @@ namespace ClientLogIn.Controllers
             catch (Exception e)
             {
 
-                Console.WriteLine(e);
+                _logger.LogError(e.Message);
             }
             return View();
         }
@@ -280,7 +285,7 @@ namespace ClientLogIn.Controllers
             catch (Exception e)
             {
 
-                Console.WriteLine(e);
+                _logger.LogError(e.Message);
             }
             return View();
         }
@@ -336,9 +341,10 @@ namespace ClientLogIn.Controllers
             {
 
                 Console.WriteLine(e);
-               
+                return 1;
+
             }
-            return View();
+            
         }
     
     }

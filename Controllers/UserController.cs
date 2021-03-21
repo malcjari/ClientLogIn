@@ -18,18 +18,20 @@ namespace ClientLogIn.Controllers
         private readonly SignInManager<User> _signInManager;
         private readonly RoleManager<Role> _roleManager;
         private readonly MyContext _context;
-        private readonly ILogger<UserController> ilogger;
+        private readonly ILogger<UserController> _logger;
 
 
         public UserController(UserManager<User> userManager,
             SignInManager<User> signInManager,
             MyContext context,
-            RoleManager<Role> roleManager)
+            RoleManager<Role> roleManager,
+            ILogger<UserController> logger)
         {
             _context = context;
             _userManager = userManager;
             _signInManager = signInManager;
             _roleManager = roleManager;
+            _logger = logger;
         }
 
 
@@ -46,7 +48,8 @@ namespace ClientLogIn.Controllers
             catch (Exception e)
             {
 
-                Console.WriteLine(e);
+                _logger.LogError(e.Message);
+                RedirectToAction("AdminProfile");
             }
             return View();
         }
@@ -61,7 +64,8 @@ namespace ClientLogIn.Controllers
             }
             catch (Exception e)
             {
-                Console.WriteLine(e);
+                _logger.LogError(e.Message);
+                RedirectToAction("GetAllUsers");
             }
             return View();
         }
@@ -78,7 +82,8 @@ namespace ClientLogIn.Controllers
             }
             catch (Exception e )
             {
-                Console.WriteLine(e);
+                _logger.LogError(e.Message);
+                RedirectToAction("GetAllUsers");
             }
             return View();
         }
@@ -123,7 +128,8 @@ namespace ClientLogIn.Controllers
             catch (Exception e)
             {
 
-                Console.WriteLine(e);
+                _logger.LogError(e.Message);
+                RedirectToAction("Create");
             }
             return View();
         }
@@ -139,7 +145,7 @@ namespace ClientLogIn.Controllers
             }
             catch (Exception e)
             {
-                Console.WriteLine(e);
+                _logger.LogError(e.Message);
             }
             return View();
         }
@@ -171,9 +177,58 @@ namespace ClientLogIn.Controllers
             catch (Exception e)
             {
 
-                Console.WriteLine(e);
+                _logger.LogError(e.Message);
+                RedirectToAction("AdminProfile");
             }
             return View();
+        }
+
+        //Metod för ändring av lösenord
+        [Authorize(Roles = "SysAdmin")]
+        [HttpPost]
+        public async Task<IActionResult> ResetPassword(ViewModel viewModel)
+        {
+            try
+            {
+                User user = await _userManager.FindByIdAsync(viewModel.user.Id.ToString());
+
+                var token = await _userManager.GeneratePasswordResetTokenAsync(user);
+
+                var result = await _userManager.ResetPasswordAsync(user, token, viewModel.newPassword);
+
+                if (result.Succeeded)
+                {
+
+                    return RedirectToAction("Index", "Profile");
+
+
+                }
+                else
+                {
+
+                    foreach (var error in result.Errors)
+                    {
+                        ModelState.AddModelError("failedpwd", error.Description);
+                    }
+
+                    ViewBag.changePwdFailed = "Password Successfully NOT Changed";
+
+
+
+                    ModelState.AddModelError("success", "Password Successfully NOT Changed");
+                }
+
+                return RedirectToAction("Index", "Profile", new { id = user.Id });
+
+            }
+            catch (Exception e)
+            {
+
+                _logger.LogError(e.Message);
+
+            }
+
+            return RedirectToAction("Index", "Profile", new { id = viewModel.user.Id });
         }
 
         [Authorize(Roles = "SysAdmin")]
@@ -188,7 +243,8 @@ namespace ClientLogIn.Controllers
             catch (Exception e)
             {
 
-                Console.WriteLine(e);
+                _logger.LogError(e.Message);
+                RedirectToAction("GetAllUsers");
             }
             return View();
         }
@@ -208,7 +264,8 @@ namespace ClientLogIn.Controllers
             }
             catch (Exception e)
             {
-                Console.WriteLine(e);
+                _logger.LogError(e.Message);
+                RedirectToAction("GetAllUsers");
             }
             return View();
         }
@@ -234,7 +291,8 @@ namespace ClientLogIn.Controllers
             catch (Exception e)
             {
 
-                Console.WriteLine(e);
+                _logger.LogError(e.Message);
+                RedirectToAction("Login", "Login");
             }
 
             return View();
@@ -255,7 +313,7 @@ namespace ClientLogIn.Controllers
             catch (Exception e)
             {
 
-                Console.WriteLine(e);
+                _logger.LogError(e.Message);
             }
             return View();
         }
@@ -276,7 +334,7 @@ namespace ClientLogIn.Controllers
             catch (Exception e)
             {
 
-                Console.WriteLine(e);
+                _logger.LogError(e.Message);
             }
             return View();
         }

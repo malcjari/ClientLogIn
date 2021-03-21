@@ -15,17 +15,19 @@ namespace ClientLogIn.Controllers
         private readonly SignInManager<User> _signInManager;
         private readonly RoleManager<Role> _roleManager;
         private readonly MyContext _context;
-        private readonly ILogger<LoginController> ilogger;
+        private readonly ILogger<LoginController> _logger;
 
         public LoginController(UserManager<User> userManager,
             SignInManager<User> signInManager,
             MyContext context,
-            RoleManager<Role> roleManager)
+            RoleManager<Role> roleManager,
+            ILogger<LoginController> logger)
         {
             _context = context;
             _userManager = userManager;
             _signInManager = signInManager;
             _roleManager = roleManager;
+            _logger = logger;
         }
 
         [HttpGet]
@@ -38,7 +40,7 @@ namespace ClientLogIn.Controllers
             catch (Exception e)
             {
 
-                Console.WriteLine(e);
+                _logger.LogError(e.Message);
             }
             return View();
         }
@@ -46,6 +48,7 @@ namespace ClientLogIn.Controllers
         [HttpPost]
         public async Task<IActionResult> Login(LoginModel loginModel)
         {
+            _logger.LogInformation($"Login Attempt, User: {loginModel.Username}");
             try
             {
                 if (ModelState.IsValid)
@@ -86,7 +89,7 @@ namespace ClientLogIn.Controllers
             }
             catch (Exception e)
             {
-                Console.WriteLine(e);
+                _logger.LogError(e.Message);
 
             }
             return View();
@@ -104,7 +107,7 @@ namespace ClientLogIn.Controllers
             catch (Exception e)
             {
 
-                Console.WriteLine(e);
+                _logger.LogError(e.Message);
             }
             return View();
         }
