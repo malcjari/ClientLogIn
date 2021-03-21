@@ -31,10 +31,25 @@ namespace ClientLogIn.Controllers
         }
 
         [HttpGet]
-        public IActionResult Login()
+        public async Task<IActionResult> LoginAsync()
         {
             try
             {
+                var u = await  _userManager.GetUserAsync(HttpContext.User);
+
+                if (u != null)
+                {
+                    var res = await _userManager.IsInRoleAsync(u, "SysAdmin");
+
+                    if (res)
+                    {
+                        return RedirectToAction("AdminProfile", "User");
+                    } else
+                    {
+                        return RedirectToAction("Index", "Profile");
+                    }
+                }
+                
                 return View();
             }
             catch (Exception e)
