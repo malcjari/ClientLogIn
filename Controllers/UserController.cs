@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.Extensions.Logging;
 
 namespace ClientLogIn.Controllers
 {    [Authorize(Roles = "SysAdmin")]
@@ -17,6 +18,8 @@ namespace ClientLogIn.Controllers
         private readonly SignInManager<User> _signInManager;
         private readonly RoleManager<Role> _roleManager;
         private readonly MyContext _context;
+        private readonly ILogger<UserController> ilogger;
+
 
         public UserController(UserManager<User> userManager,
             SignInManager<User> signInManager,

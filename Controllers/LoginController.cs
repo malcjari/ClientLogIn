@@ -1,6 +1,7 @@
 ﻿using ClientLogIn.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,6 +15,7 @@ namespace ClientLogIn.Controllers
         private readonly SignInManager<User> _signInManager;
         private readonly RoleManager<Role> _roleManager;
         private readonly MyContext _context;
+        private readonly ILogger<LoginController> ilogger;
 
         public LoginController(UserManager<User> userManager,
             SignInManager<User> signInManager,

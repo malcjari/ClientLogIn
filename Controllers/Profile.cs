@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -19,6 +20,8 @@ namespace ClientLogIn.Controllers
         private readonly RoleManager<Role> _roleManager;
         private readonly MyContext _context;
         public List<WorkShift> list = new List<WorkShift>();
+        private readonly ILogger<Profile> ilogger;
+
 
         public Profile(UserManager<User> userManager,
             SignInManager<User> signInManager,
