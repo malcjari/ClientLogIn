@@ -157,6 +157,8 @@ namespace ClientLogIn.Controllers
             {
 
                 var editUsr = await _userManager.GetUserAsync(HttpContext.User);
+
+                editUsr.UserName = user.UserName;
                 editUsr.Name = user.Name;
                 editUsr.StreetNo = user.StreetNo;
                 editUsr.City = user.City;
@@ -183,53 +185,7 @@ namespace ClientLogIn.Controllers
             return View();
         }
 
-        //Metod för ändring av lösenord
-        [Authorize(Roles = "SysAdmin")]
-        [HttpPost]
-        public async Task<IActionResult> ResetPassword(ViewModel viewModel)
-        {
-            try
-            {
-                User user = await _userManager.FindByIdAsync(viewModel.user.Id.ToString());
-
-                var token = await _userManager.GeneratePasswordResetTokenAsync(user);
-
-                var result = await _userManager.ResetPasswordAsync(user, token, viewModel.newPassword);
-
-                if (result.Succeeded)
-                {
-
-                    return RedirectToAction("Index", "Profile");
-
-
-                }
-                else
-                {
-
-                    foreach (var error in result.Errors)
-                    {
-                        ModelState.AddModelError("failedpwd", error.Description);
-                    }
-
-                    ViewBag.changePwdFailed = "Password Successfully NOT Changed";
-
-
-
-                    ModelState.AddModelError("success", "Password Successfully NOT Changed");
-                }
-
-                return RedirectToAction("Index", "Profile", new { id = user.Id });
-
-            }
-            catch (Exception e)
-            {
-
-                _logger.LogError(e.Message);
-
-            }
-
-            return RedirectToAction("Index", "Profile", new { id = viewModel.user.Id });
-        }
+        
 
         [Authorize(Roles = "SysAdmin")]
         [HttpGet]
@@ -292,16 +248,62 @@ namespace ClientLogIn.Controllers
             {
 
                 _logger.LogError(e.Message);
-                RedirectToAction("Login", "Login");
+                
             }
 
-            return View();
+            return RedirectToAction("Login", "Login");
 
-           
-            
+
+
         }
 
-      
+
+        //Metod för ändring av lösenord
+        [Authorize(Roles = "SysAdmin")]
+        [HttpPost]
+        public async Task<IActionResult> ResetPassword(ViewModel viewModel)
+        {
+            try
+            {
+                User user = await _userManager.FindByIdAsync(viewModel.user.Id.ToString());
+
+                var token = await _userManager.GeneratePasswordResetTokenAsync(user);
+
+                var result = await _userManager.ResetPasswordAsync(user, token, viewModel.newPassword);
+
+                if (result.Succeeded)
+                {
+
+                    return RedirectToAction("AdminProfile");
+                    //ScriptManager.RegisterStartupScript(this.Page, this.Page.GetType(), "pswMsg", "alert('Lösenordet har ändrats!');", true);
+
+                }
+                else
+                {
+
+                    foreach (var error in result.Errors)
+                    {
+                        ModelState.AddModelError("failedpwd", error.Description);
+                    }
+
+
+
+
+                    ModelState.AddModelError("pwdfailed", "Ändring Av Lösenord Misslyckades!");
+                }
+
+                return RedirectToAction("AdminProfile");
+
+            }
+            catch (Exception e)
+            {
+
+                _logger.LogError(e.Message);
+
+            }
+
+            return RedirectToAction("AdminProfile");
+        }
 
 
         public IActionResult CreateRole()

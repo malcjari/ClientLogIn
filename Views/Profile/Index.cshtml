@@ -42,6 +42,13 @@
         <div class="col col-6 offset-3">
             <div class="card p-2">
                 <form id="profile-info-form" method="post">
+                    @if (User.IsInRole("SysAdmin"))
+                    {
+                        <div class="form-group">
+                            <label for="username-input">Användarnamn</label>
+                            <input class="form-control" id="username-input" asp-for=user.UserName disabled />
+                        </div>
+                    }
                     <div class="form-group">
                         <label for="name-input">Namn</label>
                         <input class="form-control" id="name-input" asp-for=user.Name disabled />
@@ -110,7 +117,7 @@
                     </div>
                     <input hidden asp-for="@Model.user.Id" value="@Model.user.Id" />
                     <div class="form-group">
-                        <button asp-action="ResetPassword" class="btn btn-outline-success" type="submit">Spara</button>
+                        <button asp-action="ResetPassword" asp-controller="Profile" class="btn btn-outline" type="submit">Spara</button>
                         <button class="btn btn-outline-danger">Avbryt</button>
                     </div>
 

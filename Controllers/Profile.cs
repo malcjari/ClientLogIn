@@ -128,6 +128,7 @@ namespace ClientLogIn.Controllers
                 _user = await _userManager.FindByIdAsync(user.Id.ToString());
                 if (_user != null)
                 {
+                    _user.UserName = user.UserName;
                     _user.Name = user.Name;
                     _user.StreetNo = user.StreetNo;
                     _user.City = user.City;
@@ -193,11 +194,6 @@ namespace ClientLogIn.Controllers
                         ModelState.AddModelError("failedpwd", error.Description);
                     }
 
-                    ViewBag.changePwdFailed = "Password Successfully NOT Changed";
-
-
-
-                    ModelState.AddModelError("success", "Password Successfully NOT Changed");
                 }
 
                 return RedirectToAction("Index", "Profile", new { id = user.Id });

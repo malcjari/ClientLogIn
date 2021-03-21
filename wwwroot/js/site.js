@@ -23,6 +23,7 @@ function editprofile()
         e.preventDefault();
         Disabled = !Disabled;
         console.log(Disabled);
+        $("#username-input").attr("disabled", Disabled)
         $("#name-input").attr("disabled", Disabled)
         $("#streeNo-input").attr("disabled", Disabled)
         $("#zipCode-input").attr("disabled", Disabled)
