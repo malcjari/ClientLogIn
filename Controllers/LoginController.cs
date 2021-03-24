@@ -35,6 +35,7 @@ namespace ClientLogIn.Controllers
         {
             try
             {
+
                 var u = await  _userManager.GetUserAsync(HttpContext.User);
 
                 if (u != null)

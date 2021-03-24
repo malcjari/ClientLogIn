@@ -22,7 +22,7 @@
                 </div>
                 <div asp-validation-summary="ModelOnly" class="text-danger"></div>
                 <div class="form-group">
-                    <label asp-for="user.Name" class="control-label">Användarnamn</label>
+                    <label asp-for="user.Name" class="control-label">Namn</label>
                     <input asp-for="user.Name" type="text" class="form-control" />
                     <span asp-validation-for="user.Name" class="text-danger"></span>
                 </div>
@@ -73,6 +73,34 @@
             </form>
         </div>
     </div>
+
+    @if (ViewBag.CreateFailed != null)
+    {
+        <script type="text/javascript">
+                    Swal.fire(
+                        'Felmeddelande',
+                        '@foreach (var item in ViewBag.CreateFailed)
+                         {
+                           @item
+                           @Html.Raw("<br>")
+
+                        }'
+                        ,'error'
+                    );
+        </script>
+    }
+
+    @if (ViewBag.ExistingUser != null)
+    {
+        <script type="text/javascript">
+                    Swal.fire(
+                        'Felmeddelande',
+                        '@ViewBag.ExistingUser'
+                        ,'error'
+                    );
+        </script>
+    }
+
 </div>
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}

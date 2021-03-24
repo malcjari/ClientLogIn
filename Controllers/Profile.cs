@@ -40,6 +40,28 @@ namespace ClientLogIn.Controllers
         {
             try
             {
+
+                if (TempData["feedbackMsg"] != null)
+                {
+                    ViewBag.Error = TempData["feedbackMsg"];
+                }
+                if (TempData["successMsg"] != null)
+                {
+                    ViewBag.Success = TempData["successMsg"];
+                }
+                if (TempData["editFailedMsg"] != null)
+                {
+                    ViewBag.EditError = TempData["editFailedMsg"];
+                }
+                if (TempData["editSuccessMsg"] != null)
+                {
+                    ViewBag.EditSuccess = TempData["editSuccessMsg"];
+                }
+                if (TempData["workshiftMsg"] != null)
+                {
+                    ViewBag.WorkshiftError = TempData["workshiftMsg"];
+                }
+
                 ViewModel viewModel = new ViewModel();
 
                 //Om ett datum skickas med i metoden körs detta
@@ -113,10 +135,8 @@ namespace ClientLogIn.Controllers
                 _logger.LogError(e.Message);
                 return RedirectToAction("GetAllUsers", "User");
             }
-
             
         }
-
 
         // Metod för ändnring av användarprofil
         [HttpPost]
@@ -132,7 +152,15 @@ namespace ClientLogIn.Controllers
                     _user.Name = user.Name;
                     _user.StreetNo = user.StreetNo;
                     _user.City = user.City;
+
                     _user.ZipCode = user.ZipCode;
+                    if (user.ZipCode.ToString().Length > 5 || user.ZipCode.ToString().Length < 5)
+                    {
+
+                        TempData["editFailedMsg"] = "Ogiltigt postnummer!";
+                        return RedirectToAction("Index", new { id = user.Id});
+                    }
+
                     _user.PhoneNumber = user.PhoneNumber;
                     _user.Email = user.Email;
 
@@ -140,14 +168,11 @@ namespace ClientLogIn.Controllers
 
                     if (resultat.Succeeded)
                     {
-                        RedirectToAction("Index");
+                        TempData["editSuccessMsg"] = "Lyckad uppdatering av användare!";
                     }
                     else
                     {
-                        foreach (var error in resultat.Errors)
-                        {
-                            ModelState.AddModelError(string.Empty, error.Description);
-                        }
+                        TempData["editFailedMsg"] = "Användarnamnet existrerar redan!";
                     }
 
                 }
@@ -181,18 +206,23 @@ namespace ClientLogIn.Controllers
 
                 if (result.Succeeded)
                 {
-
-                    return RedirectToAction("Index", "Profile");
+                    TempData["successMsg"] = "success";
+                    return RedirectToAction("Index", "Profile", new { id = user.Id });
 
 
                 }
                 else
                 {
 
+                    List<string> tempList = new List<string>();
                     foreach (var error in result.Errors)
                     {
                         ModelState.AddModelError("failedpwd", error.Description);
+                        tempList.Add(error.Description);
                     }
+
+
+                    TempData["feedbackMsg"] = tempList;
 
                 }
 
@@ -274,8 +304,19 @@ namespace ClientLogIn.Controllers
         {
             try
             {
-
                 DateTime iDate = WorkShift.Date;
+                var result = _context.WorkShifts.Where(
+                    ws => ws.Date == WorkShift.Date
+                && ws.ShiftTypeId == WorkShift.ShiftTypeId
+                ).FirstOrDefault();
+
+                if (result != null)
+                {
+                    TempData["workshiftMsg"] = "Arbetspasset existrerar redan!";
+                    return RedirectToAction("Index", new { iDate = iDate, id = WorkShift.UserId });
+                }
+
+                
 
                 _context.WorkShifts.Add(WorkShift);
                 _context.SaveChanges();

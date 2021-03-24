@@ -34,11 +34,17 @@ namespace ClientLogIn.Controllers
             _logger = logger;
         }
 
+        
 
         [Authorize(Roles= "SysAdmin")]
         [HttpGet]
         public IActionResult GetAllUsers()
         {
+            if (TempData["CreateSuccessMsg"] != null)
+            {
+                ViewBag.CreateSuccess = TempData["CreateSuccessMsg"];
+            }
+
             try
             {
                 var Id = _userManager.GetUserId(HttpContext.User);
@@ -75,6 +81,18 @@ namespace ClientLogIn.Controllers
         {
             try
             {
+
+                if(TempData["ExistingUserMsg"] != null)
+                {
+                    ViewBag.ExistingUser = TempData["ExistingUserMsg"];
+                }
+
+                if (TempData["CreateFailedMsg"] != null)
+                {
+                    ViewBag.CreateFailed = TempData["CreateFailedMsg"];
+                }
+
+
                 ViewModel v = new ViewModel();
                 List<Role> roles = _context.Roles.ToList();
                 ViewBag.selectrole = new SelectList(roles, "Name", "Name");
@@ -98,7 +116,8 @@ namespace ClientLogIn.Controllers
                 if (userExist != null)
                 {
 
-                    ViewBag.usrExist = "User already exists, login";
+                    TempData["ExistingUserMsg"] = "Användaren existerar redan!";
+                    return RedirectToAction("Create");
                 }
                 else
                 {
@@ -107,18 +126,26 @@ namespace ClientLogIn.Controllers
                     var resultat = await _userManager.AddToRoleAsync(user, viewModel.role.Name);
                     if (createUser.Succeeded)
                     {
-                        if (resultat.Succeeded)
-                        {
-                            ViewBag.successMsg = "User Successfully created";
-                        }
-                        else
-                        {
-                            ViewBag.failMsg = "User misslyckad";
-                            return RedirectToAction("Create");
-                        }
+                        TempData["CreateSuccessMsg"] = "Ny användare skapad!";
+                        return RedirectToAction("GetAllUsers");
+
+                        //if (resultat.Succeeded)
+                        //{
+                            
+                        //}
+                        //else
+                        //{
+                            
+                        //}
                     }
                     else
                     {
+                        List<string> tempList = new List<string>();
+                        foreach (var error in createUser.Errors)
+                        {
+                            tempList.Add(error.Description);
+                        }
+                        TempData["CreateFailedMsg"] = tempList;
                         return RedirectToAction("Create");
                     }
                 }
@@ -162,18 +189,28 @@ namespace ClientLogIn.Controllers
                 editUsr.Name = user.Name;
                 editUsr.StreetNo = user.StreetNo;
                 editUsr.City = user.City;
+            
                 editUsr.ZipCode = user.ZipCode;
+                if(user.ZipCode.ToString().Length > 5 || user.ZipCode.ToString().Length < 5)
+                {
+
+                    TempData["editFailedMsg"] = "Ogiltigt postnummer!";
+                    return RedirectToAction("AdminProfile");
+                }
+
                 editUsr.Email = user.Email;
                 editUsr.PhoneNumber = user.PhoneNumber;
                 var newUsr = await _userManager.UpdateAsync(editUsr);
+
                 if (newUsr.Succeeded)
                 {
-                    ViewBag.SuccMsg = "User successfully updated.";
+                    TempData["editSuccessMsg"] = "Lyckad uppdatering av användare!";
                 }
                 else
                 {
-                    ViewBag.Error = "Something went wrong.";
+                    TempData["editFailedMsg"] = "Användarnamnet existrerar redan!";
                 }
+
                 return RedirectToAction("AdminProfile");
             }
             catch (Exception e)
@@ -234,6 +271,24 @@ namespace ClientLogIn.Controllers
         {
             try
             {
+                if(TempData["feedbackMsg"] != null)
+                {
+                    ViewBag.Error = TempData["feedbackMsg"];
+                }
+                if (TempData["successMsg"] != null)
+                {
+                    ViewBag.Success = TempData["successMsg"];
+                }
+                if (TempData["editFailedMsg"] != null)
+                {
+                    ViewBag.EditError = TempData["editFailedMsg"];
+                }
+                if (TempData["editSuccessMsg"] != null)
+                {
+                    ViewBag.EditSuccess = TempData["editSuccessMsg"];
+                }
+
+
                 ViewModel v = new ViewModel();
                 ViewBag.Msg = User.Identity.Name;
 
@@ -263,8 +318,10 @@ namespace ClientLogIn.Controllers
         [HttpPost]
         public async Task<IActionResult> ResetPassword(ViewModel viewModel)
         {
+            
             try
             {
+
                 User user = await _userManager.FindByIdAsync(viewModel.user.Id.ToString());
 
                 var token = await _userManager.GeneratePasswordResetTokenAsync(user);
@@ -274,22 +331,22 @@ namespace ClientLogIn.Controllers
                 if (result.Succeeded)
                 {
 
-                    return RedirectToAction("AdminProfile");
-                    //ScriptManager.RegisterStartupScript(this.Page, this.Page.GetType(), "pswMsg", "alert('Lösenordet har ändrats!');", true);
-
+                    TempData["successMsg"] = "success";
+                    return RedirectToAction("AdminProfile");                   
                 }
                 else
                 {
-
+                    List<string> tempList = new List<string>();
                     foreach (var error in result.Errors)
                     {
                         ModelState.AddModelError("failedpwd", error.Description);
+                        tempList.Add(error.Description);
                     }
 
 
+                    TempData["feedbackMsg"] = tempList;
 
 
-                    ModelState.AddModelError("pwdfailed", "Ändring Av Lösenord Misslyckades!");
                 }
 
                 return RedirectToAction("AdminProfile");

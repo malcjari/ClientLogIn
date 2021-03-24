@@ -5,7 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"] - KonferensrumAPIConnection</title>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
-    <link href="~/css/HotelSeasharp.css" rel="stylesheet" />
+    <link href="http://193.10.202.77/css/HotelSeasharp.css" rel="stylesheet" />
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10.15.6/dist/sweetalert2.all.min.js"></script>
     <link rel="stylesheet" href="~/css/site.css" />
 </head>
 <body>
@@ -27,15 +28,15 @@
                         <li class="dropdown nav-item">
                             <a class="nav-link" style="font-weight:bold">KONFERENSRUM</a>
                             <div class="dropdown-content p-2">
-                                <a href="http://193.10.202.77/KonferensrumSida" >Konferensrum</a>
+                                <a href="http://193.10.202.77/KonferensrumSida">Konferensrum</a>
                                 <a href="#">Administratör</a>
                             </div>
-                            
+
                         </li>
                         <li class="dropdown nav-item">
                             <a class="nav-link" style="font-weight:bold">GÄST</a>
                             <div class="dropdown-content p-2">
-                                <a href="http://193.10.202.78/GuestWebSite" >Gästsida</a>
+                                <a href="http://193.10.202.78/GuestWebSite">Gästsida</a>
                                 <a href="http://193.10.202.78/PublishGuestAdmin">Administratör</a>
                             </div>
                         </li>
@@ -53,25 +54,27 @@
 
                             </li>
 
-                        } else {
-                            
+                        }
+                        else
+                        {
+
                             <a class="nav-link" style="font-weight:bold" asp-controller="Login" asp-action="Login">PERSONAL</a>
                         }
-                    <li class="dropdown nav-item">
-                        <a class="nav-link" style="font-weight:bold;">BOKA RUM</a>
-                        <div class="dropdown-content p-2">
-                            <a href="http://193.10.202.81/Seasharp">Boka Rum</a>
-                            <a href="http://193.10.202.81/Seasharpadmin">Administratör</a>
-                        </div>
-                    </li>
+                        <li class="dropdown nav-item">
+                            <a class="nav-link" style="font-weight:bold;">BOKA RUM</a>
+                            <div class="dropdown-content p-2">
+                                <a href="http://193.10.202.81/Seasharp">Boka Rum</a>
+                                <a href="http://193.10.202.81/Seasharpadmin">Administratör</a>
+                            </div>
+                        </li>
 
-                    <li class="dropdown nav-item">
-                        <a class="nav-link" style="font-weight:bold">RESTURANG/AKTIVITETER</a>
-                        <div class="dropdown-content p-2">
-                            <a href="http://informatik12.ei.hv.se/resakt">Resturang/Aktiviteter</a>
-                            <a href="http://informatik12.ei.hv.se/resakt/Admin">Administratör</a>
-                        </div>
-                    </li>
+                        <li class="dropdown nav-item">
+                            <a class="nav-link" style="font-weight:bold">RESTURANG/AKTIVITETER</a>
+                            <div class="dropdown-content p-2">
+                                <a href="http://informatik12.ei.hv.se/resakt">Resturang/Aktiviteter</a>
+                                <a href="http://informatik12.ei.hv.se/resakt/Admin">Administratör</a>
+                            </div>
+                        </li>
 
 
                         @if (User.Identity.IsAuthenticated)
@@ -92,7 +95,6 @@
             @RenderBody()
         </main>
     </div>
-    @*<img class="" src="http://193.10.202.77/images/hotelbilden.jpg" width="1400" height="900" align="middle" margin-left="auto" margin-right="auto" />*@
     <footer class="border-top footer text-muted">
         <div class="container">
             &copy; 2021 - Hotell SeaSharp - <a asp-area="" asp-controller="Home" asp-action="Index">Till första sidan</a>
@@ -101,6 +103,7 @@
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
+    <script src="//cdn.jsdelivr.net/npm/sweetalert2@10"></script>
     @await RenderSectionAsync("Scripts", required: false)
 
 </body>

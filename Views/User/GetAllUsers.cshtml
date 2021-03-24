@@ -48,4 +48,16 @@
             }
         </tbody>
     </table>
+
+    @if (ViewBag.CreateSuccess != null)
+    {
+        <script type="text/javascript">
+                    Swal.fire(
+                        'Felmeddelande',
+                        '@ViewBag.CreateSuccess'
+                        ,'success'
+                    );
+        </script>
+    }
+
 </div>

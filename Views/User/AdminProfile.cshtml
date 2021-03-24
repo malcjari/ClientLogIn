@@ -1,7 +1,5 @@
 ﻿@model ClientLogIn.Models.ViewModel
-@*@using System.Security.Claims;
-@using Microsoft.AspNetCore.Identity;
-@inject SignInManager<User> _signInManager;*@
+
 @{
     ViewData["Title"] = "AdminProfile";
 }
@@ -14,19 +12,12 @@
     </nav>
     <h1 class="my-4 text-center">System Administratör</h1>
 
-    @if (ViewData.ModelState.ErrorCount > 0)
-    {
-        <div>
-            <p class="alert">@ViewData.ModelState["failedpwd"].Errors.First().ErrorMessage</p>
-        </div>
-    }
-
 
     <div class="container-fluid">
 
         <div id="profile-row" class="row mb-2">
             <div class="col col-6 offset-3">
-                <div class="p-2 center-div">
+                <div class="p-2">
                     <form id="profile-info-form" method="post">
                         <div class="form-group">
                             <label for="username-input">Användarnamn</label>
@@ -82,25 +73,20 @@
                     <form id="reset-password-form" method="post">
 
                         <div class="form-group">
-                            <label>Nuvarande Lösenord</label>
-                            <input class="form-control" type="password" id="old-password-input" />
-                        </div>
-
-                        <div class="form-group">
                             <label>Nytt Lösenord</label>
-                            <input name="newPassword" asp-for="@Model.newPassword" class="form-control" type="password" id="new-password-input" />
+                            <input required name="newPassword" asp-for="@Model.newPassword" class="form-control" type="password" id="new-password-input" />
                             <span><p id="change-text"></p></span>
                             <small class="form-text text-muted">Måste innehålla minst 8 tecken varav minst en stor bokstav och minst en siffra!</small>
                         </div>
 
                         <div class="form-group">
                             <label>Upprepa Lösenord</label>
-                            <input name="newPasswordRepeat" asp-for="@Model.newPasswordRepeat" class="form-control" type="password" id="new-password-input-again" />
+                            <input required name="newPasswordRepeat" asp-for="@Model.newPasswordRepeat" class="form-control" type="password" id="new-password-input-again" />
                             <small class="form-text text-muted">Upprepa nytt lösenord</small>
                         </div>
                         <input hidden asp-for="@Model.user.Id" value="@Model.user.Id" />
                         <div class="form-group">
-                            <button asp-action="ResetPassword" asp-controller="User" class="btn btn-outline" type="submit">Spara</button>
+                            <button asp-action="ResetPassword" asp-controller="User" class="btn btn-outline-success" type="submit">Spara</button>
                             <button class="btn btn-outline-danger">Avbryt</button>
                         </div>
 
@@ -111,10 +97,60 @@
         </div>
     </div>
 </div>
-<br/>
-@if(User.Identity.IsAuthenticated)
+<br />
+
+@if (ViewBag.Error != null)
+{
+    <script type="text/javascript">
+                    Swal.fire(
+                        'Felmeddelande',
+                        '@foreach (var item in ViewBag.Error)
+                         {
+                           @item
+                           @Html.Raw("<br>")
+
+                        }'
+                        ,'error'
+                    );
+    </script>
+}
+
+@if (ViewBag.Success != null)
+{
+    <script type="text/javascript">
+        Swal.fire(
+            'Lyckades',
+            'Ditt lösenord är nu ändrat!'
+            , 'success'
+        );
+    </script>
+}
+
+@if (ViewBag.EditError != null)
+{
+    <script type="text/javascript">
+                    Swal.fire(
+                        'Felmeddelande',
+                        '@ViewBag.EditError'
+                        ,'error'
+                    );
+    </script>
+}
+
+@if (ViewBag.EditSuccess != null)
+{
+    <script type="text/javascript">
+                    Swal.fire(
+                        'Lyckades',
+                        '@ViewBag.EditSuccess'
+                        , 'success'
+                    );
+    </script>
+}
+
+@if (User.Identity.IsAuthenticated)
 {
 
-    
+
 }
 
