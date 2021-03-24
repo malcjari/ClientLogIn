@@ -1,10 +1,37 @@
 ﻿$(document).ready(function () {
 
-   
+    //import { ajax } from "jquery";
+
     editpassword();
-    editprofile(); 
+    editprofile();
+    onChange();
 
 })
+
+function onChange() {
+
+    $("#new-password-input").keydown(function () {
+
+        
+
+        var str = $("#new-password-input").val();
+        console.log(str);
+
+        var xhttp;
+        if (str.length == 0) {
+            $("#change-text").innerHTML = "";
+            return;
+        }
+        xhttp = new XMLHttpRequest();
+        xhttp.onreadystatechange = function () {
+                    $("#change-text").innerHTML = "FÖR KORT!!";
+
+        };
+
+    })
+}
+
+    
 
 
 function editpassword() {

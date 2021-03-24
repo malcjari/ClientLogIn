@@ -274,9 +274,12 @@ namespace ClientLogIn.Controllers
         {
             try
             {
+
+                DateTime iDate = WorkShift.Date;
+
                 _context.WorkShifts.Add(WorkShift);
                 _context.SaveChanges();
-                return RedirectToAction("Index", new { id = WorkShift.UserId });
+                return RedirectToAction("Index", new {iDate=iDate, id = WorkShift.UserId });
             }
             catch (Exception e)
             {

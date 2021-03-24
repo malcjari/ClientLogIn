@@ -12,7 +12,7 @@
             <li class="breadcrumb-item active" aria-current="page"><a href="#">Profil</a></li>
         </ol>
     </nav>
-    <h1 class="text-center">System Administratör</h1>
+    <h1 class="my-4 text-center">System Administratör</h1>
 
     @if (ViewData.ModelState.ErrorCount > 0)
     {
@@ -26,7 +26,7 @@
 
         <div id="profile-row" class="row mb-2">
             <div class="col col-6 offset-3">
-                <div class="card p-2 center-div">
+                <div class="p-2 center-div">
                     <form id="profile-info-form" method="post">
                         <div class="form-group">
                             <label for="username-input">Användarnamn</label>
@@ -89,6 +89,7 @@
                         <div class="form-group">
                             <label>Nytt Lösenord</label>
                             <input name="newPassword" asp-for="@Model.newPassword" class="form-control" type="password" id="new-password-input" />
+                            <span><p id="change-text"></p></span>
                             <small class="form-text text-muted">Måste innehålla minst 8 tecken varav minst en stor bokstav och minst en siffra!</small>
                         </div>
 
