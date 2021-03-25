@@ -122,10 +122,13 @@ namespace ClientLogIn.Controllers
                 else
                 {
                     var createUser = await _userManager.CreateAsync(viewModel.user, viewModel.user.PasswordHash);
-                    var user = await _userManager.FindByNameAsync(viewModel.user.UserName);
-                    var resultat = await _userManager.AddToRoleAsync(user, viewModel.role.Name);
+
+                    
                     if (createUser.Succeeded)
                     {
+                        var user = await _userManager.FindByNameAsync(viewModel.user.UserName);
+                        var resultat = await _userManager.AddToRoleAsync(user, viewModel.role.Name);
+
                         TempData["CreateSuccessMsg"] = "Ny användare skapad!";
                         return RedirectToAction("GetAllUsers");
 

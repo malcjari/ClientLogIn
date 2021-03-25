@@ -365,4 +365,15 @@
                     );
         </script>
     }
+
+    @if (ViewBag.WorkshiftSuccess != null)
+    {
+        <script type="text/javascript">
+                    Swal.fire(
+                        'Lyckades',
+                        '@ViewBag.WorkshiftSuccess'
+                        , 'success'
+                    );
+        </script>
+    }
 </div>

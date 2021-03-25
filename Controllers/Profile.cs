@@ -61,6 +61,10 @@ namespace ClientLogIn.Controllers
                 {
                     ViewBag.WorkshiftError = TempData["workshiftMsg"];
                 }
+                if(TempData["workshiftSuccessMsg"] != null)
+                {
+                    ViewBag.WorkshiftSuccess = TempData["workshiftSuccessMsg"];
+                }
 
                 ViewModel viewModel = new ViewModel();
 
@@ -316,8 +320,8 @@ namespace ClientLogIn.Controllers
                     return RedirectToAction("Index", new { iDate = iDate, id = WorkShift.UserId });
                 }
 
-                
 
+                TempData["workshiftSuccessMsg"] = "Nytt arbetspass skapat!";
                 _context.WorkShifts.Add(WorkShift);
                 _context.SaveChanges();
                 return RedirectToAction("Index", new {iDate=iDate, id = WorkShift.UserId });
