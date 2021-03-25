@@ -237,7 +237,7 @@
                         @if (User.IsInRole("SysAdmin"))
                         {
                             @*Informations rutan som dyker upp när man klickar på en cell*@
-                            <div class="modal fade" id="id-@ViewBag.count" data-backdrop="static" data-keyboard="true">
+                            <div class="modal" id="id-@ViewBag.count" data-backdrop="static" data-keyboard="true">
                                 <div class="modal-dialog">
                                     <div class="modal-content">
                                         <div class="modal-header">
@@ -256,7 +256,7 @@
                                             <div class="modal-body">
                                                 <hr />
                                                 <div class="card">
-                                                    <table class="table-striped">
+                                                    <table style="font-size: medium" class="table-striped">
                                                         <thead>
                                                             <tr>
                                                                 <th>Datum</th>
