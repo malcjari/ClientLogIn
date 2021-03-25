@@ -1,32 +1,45 @@
 ﻿@model ClientLogIn.Models.ViewModel
-
 @*
     For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 *@
 @{
 }
 
-<div class="container">
 
+
+<h1></h1>
+<div class="container card">
 
     @if (User.IsInRole("SysAdmin"))
     {
-        <h2>SysAdmin</h2>
-    }
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a asp-action="AdminProfile" asp-controller="User">Profil</a></li>
+                <li class="breadcrumb-item"><a asp-action="GetAllUsers" asp-controller="User">Alla Användare</a></li>
+                <li class="breadcrumb-item active" aria-current="page"><a href="#">Användare</a></li>
+            </ol>
+        </nav>
+        <h1 class="my-4 text-center">@Model.user.UserName</h1>
 
-    @if (User.Identity.IsAuthenticated)
+    }
+    else
     {
-        <form method="post" asp-controller="Login" asp-action="Logout">
-            <input type="submit" value="Logout" />
-        </form>
+        <h1 class="my-2 text-center">Min Sida</h1>
 
     }
 
     @*Profil rad*@
     <div id="profile-row" class="row mb-2">
-        <div class="col col-6">
-            <div class="card p-2">
+        <div class="col col-6 offset-3">
+            <div class="p-2">
                 <form id="profile-info-form" method="post">
+                    @if (User.IsInRole("SysAdmin"))
+                    {
+                        <div class="form-group">
+                            <label for="username-input">Användarnamn</label>
+                            <input class="form-control" id="username-input" asp-for=user.UserName disabled />
+                        </div>
+                    }
                     <div class="form-group">
                         <label for="name-input">Namn</label>
                         <input class="form-control" id="name-input" asp-for=user.Name disabled />
@@ -48,7 +61,7 @@
                         <input class="form-control" id="phoneNumber-input" asp-for=user.PhoneNumber disabled />
                     </div>
                     <div class="form-group">
-                        <label for="email-input">Telefon</label>
+                        <label for="email-input">Email</label>
                         <input type="email" class="form-control" id="email-input" asp-for=user.Email disabled />
                     </div>
                     <input hidden asp-for="user.Id" />
@@ -63,49 +76,34 @@
                     <div class="form-group">
                         <button id="toggle-password-btn" class="btn btn-info">Ändra Lösenord</button>
                     </div>
+                    <div></div>
 
                 </form>
-
-
-
-
-                @*<button id="toggle-email-btn" class="btn-info">Ändra Epost</button>
-                    <form id="reset-email-form">
-                        <label for=""></label>
-                        <input type="email" id="new-password-input" />
-                        <input type="email" id="new-password-input-again" />
-                        <button class="btn-outline-success" type="submit">Spara</button>
-                        <button class="btn-outline-danger">Avbryt</button>
-                    </form>*@
 
             </div>
 
 
         </div>
 
-        <div class="col col-6">
+        <div class="col col-6 offset-3 my-1">
+
             <div style="display:none;" class="card p-2" id="password-card">
                 <form id="reset-password-form" method="post">
 
                     <div class="form-group">
-                        <label>Nuvarande Lösenord</label>
-                        <input class="form-control" type="password" id="old-password-input" />
-                    </div>
-
-                    <div class="form-group">
                         <label>Nytt Lösenord</label>
-                        <input class="form-control" type="password" id="new-password-input" />
+                        <input required name="newPassword" asp-for="@Model.newPassword" class="form-control" type="password" id="new-password-input" />
                         <small class="form-text text-muted">Måste innehålla minst 8 tecken varav minst en stor bokstav och minst en siffra!</small>
                     </div>
 
                     <div class="form-group">
                         <label>Upprepa Lösenord</label>
-                        <input class="form-control" type="password" id="new-password-input-again" />
+                        <input required name="newPasswordRepeat" asp-for="@Model.newPasswordRepeat" class="form-control" type="password" id="new-password-input-again" />
                         <small class="form-text text-muted">Upprepa nytt lösenord</small>
                     </div>
-
+                    <input hidden asp-for="@Model.user.Id" value="@Model.user.Id" />
                     <div class="form-group">
-                        <button class="btn btn-outline-success" type="submit">Spara</button>
+                        <button asp-action="ResetPassword" asp-controller="Profile" class="btn btn-outline" type="submit">Spara</button>
                         <button class="btn btn-outline-danger">Avbryt</button>
                     </div>
 
@@ -115,11 +113,11 @@
 
     </div>
 
+    <hr />
 
 
 
-
-
+    <h2 class="text-center">SCHEMA</h2>
     @*Calendar rad*@
     <div id="calendar-row" class="row">
 
@@ -130,7 +128,7 @@
                 </div>
 
                 @*Kalenderns knappar*@
-                <div id="calendar-header-controller" class="row justify-content-between">
+                <div id="calendar-header-controller" class=" mx-2 row justify-content-between">
 
 
                     <a asp-action="Index" asp-route-iDate="@{ @Model.dayData.FullDate.AddMonths(-1);}"> <img class="calendar-header-btn my-1 vw-90" src="~/arrow-left-square.svg" /></a>
@@ -139,166 +137,243 @@
                 </div>
             </div>
 
-            @*Veckodagarnas namn*@
-            <div id="calendar-table-header" class="row">
-                <div class="col calendar-header-cell">
-                    <p>Måndag</p>
+            <div id="calendar-body">
+                @*Veckodagarnas namn*@
+                <div id="calendar-table-header" class="row">
+                    <div class="col calendar-header-cell">
+                        <p>Mån.</p>
+                    </div>
+                    <div class="col calendar-header-cell">
+                        <p>Tis.</p>
+                    </div>
+                    <div class="col calendar-header-cell">
+                        <p>Ons.</p>
+                    </div>
+                    <div class="col calendar-header-cell">
+                        <p>Tors.</p>
+                    </div>
+                    <div class="col calendar-header-cell">
+                        <p>Fre</p>
+                    </div>
+                    <div class="col calendar-header-cell">
+                        <p>Lör</p>
+                    </div>
+                    <div class="col calendar-header-cell">
+                        <p>Sön</p>
+                    </div>
                 </div>
-                <div class="col calendar-header-cell">
-                    <p>Tisdag</p>
-                </div>
-                <div class="col calendar-header-cell">
-                    <p>Onsdag</p>
-                </div>
-                <div class="col calendar-header-cell">
-                    <p>Torsdag</p>
-                </div>
-                <div class="col calendar-header-cell">
-                    <p>Fredag</p>
-                </div>
-                <div class="col calendar-header-cell">
-                    <p>Lördag</p>
-                </div>
-                <div class="col calendar-header-cell">
-                    <p>Söndag</p>
-                </div>
-            </div>
-            <div class="row">
+                <div class="row">
 
-                @*Skriver ut toma celler så att månadens första dag hamnar under rätt kolumn*@
+                    @*Skriver ut toma celler så att månadens första dag hamnar under rätt kolumn*@
 
-                @for (int i = 0; i < Model.dayData.FirstDayOfWeek; i++)
-                {
-                    <div class="col calendar-cell row-cols-7"></div>
-                }
-
-
-                @*Skriver ut lika många celler i kalendern som det finns dagar för den aktiva månaden*@
-                @for (int i = 0; i < Model.dayData.Days; i++)
-                {
-                    //Ökar siffran med ett så att datumet blir rätt för varje cell
-                    ViewBag.count++;
-
-                    if (ViewBag.count == Model.dayData.TodaysDate)
+                    @for (int i = 0; i < Model.dayData.FirstDayOfWeek; i++)
                     {
-
-                    }
-                    else
-                    {
-
+                        <div class="col calendar-cell row-cols-7"></div>
                     }
 
-                    <div class="col calendar-cell row-cols-7" data-toggle="modal" data-target="#id-@ViewBag.count">
 
-                        <div>
-                            @*Skriver ut rätt datum för varje cell i kalendern*@
-                            @ViewBag.count
-                            @{ Model.dayData.ClickedFullDate = new DateTime(Model.dayData.FullDate.Year, Model.dayData.FullDate.Month, @ViewBag.count);}
-                        </div>
+                    @*Skriver ut lika många celler i kalendern som det finns dagar för den aktiva månaden*@
+                    @for (int i = 0; i < Model.dayData.Days; i++)
+                    {
+                        //Ökar siffran med ett så att datumet blir rätt för varje cell
+                        ViewBag.count++;
+
+                        if (ViewBag.count == Model.dayData.TodaysDate)
+                        {
+
+                        }
+                        else
+                        {
+
+                        }
+
+                        <div class="col calendar-cell row-cols-7" data-toggle="modal" data-target="#id-@ViewBag.count">
+
+                            <div>
+                                @*Skriver ut rätt datum för varje cell i kalendern*@
+                                <p style="color: gray">@ViewBag.count</p>
+                                @{ Model.dayData.ClickedFullDate = new DateTime(Model.dayData.FullDate.Year, Model.dayData.FullDate.Month, @ViewBag.count);}
+                            </div>
 
 
 
-                        <div class="row row-cols-1">
+                            <div class="row row-cols-1">
 
-                            @*Skriver ut rätt WorkShift för rätt datum*@
-                            @foreach (var item in Model.WorkShiftList)
-                            {
-                                if (item.Date.Day == ViewBag.count)
+                                @*Skriver ut rätt WorkShift för rätt datum*@
+                                @foreach (var item in Model.WorkShiftList)
                                 {
-                                    if (item.ShiftType.Name == "Dag")
+                                    if (item.Date.Day == ViewBag.count)
                                     {
-                                        <div class="card day-shift col col-12 order-first">
-                                            <div>
-                                                Dagsskift
+                                        if (item.ShiftType.Name == "Dag")
+                                        {
+                                            <div class="card day-shift col col-12 order-first">
+                                                <div>
+                                                    Dagsskift
+                                                </div>
                                             </div>
-                                        </div>
-                                    }
-                                    else if (item.ShiftType.Name == "Kväll")
-                                    {
-                                        <div class="card evening-shift col col-12 align-self-center">
-                                            <div>
-                                                Kvällsskift
+                                        }
+                                        else if (item.ShiftType.Name == "Kväll")
+                                        {
+                                            <div class="card evening-shift col col-12 align-self-center">
+                                                <div>
+                                                    Kvällsskift
+                                                </div>
                                             </div>
-                                        </div>
-                                    }
-                                    else
-                                    {
-                                        <div class="card night-shift col col-12 order-last">
-                                            <div>
-                                                Nattskift
+                                        }
+                                        else
+                                        {
+                                            <div class="card night-shift col col-12 order-last">
+                                                <div>
+                                                    Nattskift
+                                                </div>
                                             </div>
-                                        </div>
+                                        }
                                     }
                                 }
-                            }
-                        </div>
-                    </div>
-
-                    @*Informations rutan som dyker upp när man klickar på en cell*@
-                    <div class="modal fade" id="id-@ViewBag.count" data-backdrop="static" data-keyboard="true">
-                        <div class="modal-dialog">
-                            <div class="modal-content">
-                                <div class="modal-header">
-                                    <h5 class="modal-title">Add Work-Shift</h5>
-                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                        <span aria-hidden="true">&times;</span>
-                                    </button>
-                                </div>
-                                <form method="post">
-                                    <div class="modal-body">
-                                        <input id="dateSelect" type="date" class="form-control mb-2" asp- asp-for="WorkShift.Date" value="@Model.dayData.ClickedFullDate.ToString("yyyy-MM-dd")" />
-                                        <select id="shiftSelect" class="custom-select mb-2" asp-for="WorkShift.ShiftTypeId" asp-items="ViewBag.shiftList"></select>
-                                        <select id="taskSelect" class="custom-select" asp-for="WorkShift.TaskId" asp-items="ViewBag.taskList"></select>
-                                        <input hidden asp-for="WorkShift.UserId" value="@ViewBag.userId" />
-                                    </div>
-                                    <div class="modal-body">
-                                        <hr />
-                                        <div class="card">
-                                            <table class="table-striped">
-                                                <thead>
-                                                    <tr>
-                                                        <th>Datum</th>
-                                                        <th>Skift</th>
-                                                        <th>Uppgift</th>
-                                                    </tr>
-                                                </thead>
-                                                @*Skriver ut alla WorkShift som finns på den valda dagen i en tabell*@
-                                                <tbody class="table table-striped">
-                                                    @foreach (var item in Model.WorkShiftList)
-                                                    {
-                                                        if (item.Date.Day == ViewBag.count)
-                                                        {
-                                                            <tr>
-                                                                <td>@item.Date.ToString("yyyy-MM-dd")</td>
-                                                                <td>@item.ShiftType.Name</td>
-                                                                <td>@item.Task.Name</td>
-                                                                <td><a asp-action="Delete" asp-controller="Profile" asp-route-id="@item.Id"><img src="~/trash-fill.svg" /></a></td>
-                                                            </tr>
-                                                        }
-
-                                                    }
-                                                </tbody>
-                                            </table>
-                                        </div>
-
-                                    </div>
-                                    <div class="modal-footer">
-                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
-                                        <button type="submit" asp-action="Add" asp-route-WorkShift="@Model.WorkShift" class="btn btn-primary">Add</button>
-                                    </div>
-                                </form>
-
                             </div>
                         </div>
-                    </div>
+
+                        //Edit funktion för sysadmin, begränsad
+                        @if (User.IsInRole("SysAdmin"))
+                        {
+                            @*Informations rutan som dyker upp när man klickar på en cell*@
+                            <div class="modal" id="id-@ViewBag.count" data-backdrop="static" data-keyboard="true">
+                                <div class="modal-dialog">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title">Add Work-Shift</h5>
+                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                <span aria-hidden="true">&times;</span>
+                                            </button>
+                                        </div>
+                                        <form method="post">
+                                            <div class="modal-body">
+                                                <input id="dateSelect" type="date" class="form-control mb-2" asp- asp-for="WorkShift.Date" value="@Model.dayData.ClickedFullDate.ToString("yyyy-MM-dd")" />
+                                                <select id="shiftSelect" class="custom-select mb-2" asp-for="WorkShift.ShiftTypeId" asp-items="ViewBag.shiftList"></select>
+                                                <select id="taskSelect" class="custom-select" asp-for="WorkShift.TaskId" asp-items="ViewBag.taskList"></select>
+                                                <input hidden asp-for="WorkShift.UserId" value="@ViewBag.userId" />
+                                            </div>
+                                            <div class="modal-body">
+                                                <hr />
+                                                <div class="card">
+                                                    <table style="font-size: medium" class="table-striped">
+                                                        <thead>
+                                                            <tr>
+                                                                <th>Datum</th>
+                                                                <th>Skift</th>
+                                                                <th>Uppgift</th>
+                                                            </tr>
+                                                        </thead>
+                                                        @*Skriver ut alla WorkShift som finns på den valda dagen i en tabell*@
+                                                        <tbody class="table table-striped">
+                                                            @foreach (var item in Model.WorkShiftList)
+                                                            {
+                                                                if (item.Date.Day == ViewBag.count)
+                                                                {
+                                                                    <tr>
+                                                                        <td>@item.Date.ToString("yyyy-MM-dd")</td>
+                                                                        <td>@item.ShiftType.Name</td>
+                                                                        <td>@item.Task.Name</td>
+                                                                        <td><a asp-action="Delete" asp-controller="Profile" asp-route-id="@item.Id"><img src="~/trash-fill.svg" /></a></td>
+                                                                    </tr>
+                                                                }
+
+                                                            }
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                                                <button type="submit" asp-action="Add" asp-route-WorkShift="@Model.WorkShift" class="btn btn-primary">Add</button>
+                                            </div>
+                                        </form>
+
+                                    </div>
+                                </div>
+                            </div>
+                        }
 
 
 
-                }
+
+                    }
+                </div>
             </div>
         </div>
 
 
     </div>
 
+    @if (ViewBag.Error != null)
+    {
+        <script type="text/javascript">
+                    Swal.fire(
+                        'Felmeddelande',
+                        '@foreach (var item in ViewBag.Error)
+                         {
+                           @item
+                           @Html.Raw("<br>")
+
+                        }'
+                        ,'error'
+                    );
+        </script>
+    }
+
+    @if (ViewBag.Success != null)
+    {
+        <script type="text/javascript">
+            Swal.fire(
+                'Lyckades',
+                'Ditt lösenord är nu ändrat!'
+                , 'success'
+            );
+        </script>
+    }
+
+    @if (ViewBag.EditError != null)
+    {
+        <script type="text/javascript">
+                    Swal.fire(
+                        'Felmeddelande',
+                        '@ViewBag.EditError'
+                        ,'error'
+                    );
+        </script>
+    }
+
+    @if (ViewBag.EditSuccess != null)
+    {
+        <script type="text/javascript">
+                    Swal.fire(
+                        'Lyckades',
+                        '@ViewBag.EditSuccess'
+                        , 'success'
+                    );
+        </script>
+    }
+
+    @if (ViewBag.WorkshiftError != null)
+    {
+        <script type="text/javascript">
+                    Swal.fire(
+                        'Lyckades',
+                        '@ViewBag.WorkshiftError'
+                        , 'error'
+                    );
+        </script>
+    }
+
+    @if (ViewBag.WorkshiftSuccess != null)
+    {
+        <script type="text/javascript">
+                    Swal.fire(
+                        'Lyckades',
+                        '@ViewBag.WorkshiftSuccess'
+                        , 'success'
+                    );
+        </script>
+    }
 </div>

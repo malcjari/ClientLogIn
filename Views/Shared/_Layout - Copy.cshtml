@@ -6,19 +6,17 @@
     <title>@ViewData["Title"] - KonferensrumAPIConnection</title>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link href="http://193.10.202.77/css/HotelSeasharp.css" rel="stylesheet" />
-    <link rel="stylesheet" href="~/css/site.css" />
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10.15.6/dist/sweetalert2.all.min.js"></script>
-
-
+    <link rel="stylesheet" href="~/css/site.css" />
 </head>
 <body>
-
+    @*<img class="kund" src="http://193.10.202.77/images/kund.jpg" />
+        <p style="text-align: right">Kundservice</p>*@
     <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light border-bottom box-shadow mb-3" style=" background-color: lightgrey; background: rgba(211, 211, 211, 0.8); height: 40%;
-        width: 100%;">
+        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light border-bottom box-shadow mb-3" style="background:rgba(255,127,80,0.6); width:100%;">
             <h1 class="rubrik1">Hotell SeaSharp</h1>
 
-            <div class="containeruppe">
+            <div class="container">
                 @*<a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">Hotell SeaSharp</a>*@
                 <button class="navbar-toggler" type="button" data-toggle="collapse" data-target=".navbar-collapse" aria-controls="navbarSupportedContent"
                         aria-expanded="false" aria-label="Toggle navigation">
@@ -26,12 +24,9 @@
                 </button>
                 <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
                     <ul class="navbar-nav flex-grow-1">
+
                         <li class="dropdown nav-item">
-                            <a href="http://193.10.202.77/Home/Index" class="nav-link text-dark" style="font-weight:bold">HOME</a>
-                        </li>
-                            
-                        <li class="dropdown nav-item">
-                            <a class="nav-link text-dark" style="font-weight:bold">KONFERENSRUM</a>
+                            <a class="nav-link" style="font-weight:bold">KONFERENSRUM</a>
                             <div class="dropdown-content p-2">
                                 <a href="http://193.10.202.77/KonferensrumSida">Konferensrum</a>
                                 <a href="#">Administratör</a>
@@ -39,7 +34,7 @@
 
                         </li>
                         <li class="dropdown nav-item">
-                            <a class="nav-link text-dark" style="font-weight:bold">GÄST</a>
+                            <a class="nav-link" style="font-weight:bold">GÄST</a>
                             <div class="dropdown-content p-2">
                                 <a href="http://193.10.202.78/GuestWebSite">Gästsida</a>
                                 <a href="http://193.10.202.78/PublishGuestAdmin">Administratör</a>
@@ -50,7 +45,7 @@
                         {
 
                             <li class="dropdown nav-item">
-                                <a class="nav-link text-dark" style="font-weight:bold">SYSTEM ADMINISTRATÖR</a>
+                                <a class="nav-link" style="font-weight:bold">SYSTEM ADMINISTRATÖR</a>
                                 <div class="dropdown-content p-2">
                                     <a asp-controller="User" asp-action="AdminProfile">Min Sida</a>
                                     <a asp-controller="User" asp-action="GetAllUsers">Användare</a>
@@ -66,7 +61,7 @@
                             <a class="nav-link" style="font-weight:bold" asp-controller="Login" asp-action="Login">PERSONAL</a>
                         }
                         <li class="dropdown nav-item">
-                            <a class="nav-link text-dark" style="font-weight:bold;">BOKA RUM</a>
+                            <a class="nav-link" style="font-weight:bold;">BOKA RUM</a>
                             <div class="dropdown-content p-2">
                                 <a href="http://193.10.202.81/Seasharp">Boka Rum</a>
                                 <a href="http://193.10.202.81/Seasharpadmin">Administratör</a>
@@ -74,7 +69,7 @@
                         </li>
 
                         <li class="dropdown nav-item">
-                            <a class="nav-link text-dark" style="font-weight:bold">RESTURANG/AKTIVITETER</a>
+                            <a class="nav-link" style="font-weight:bold">RESTURANG/AKTIVITETER</a>
                             <div class="dropdown-content p-2">
                                 <a href="http://informatik12.ei.hv.se/resakt">Resturang/Aktiviteter</a>
                                 <a href="http://informatik12.ei.hv.se/resakt/Admin">Administratör</a>
@@ -96,26 +91,19 @@
         </nav>
     </header>
     <div class="container">
-        @*<main role="main" class="pb-3">*@
-        @RenderBody()
-        @*</main>*@
+        <main role="main" class="pb-3">
+            @RenderBody()
+        </main>
     </div>
-    <div>
-        @*<img class="bild" src="http://193.10.202.77/images/hotelbilden.jpg" width="1400" height="900" align="middle" margin-left="auto" margin-right="auto" />*@
-    </div>
-
-
-
-
-    <footer class="bottenFooter">
-        <div class="containernere">
+    <footer class="border-top footer text-muted">
+        <div class="container">
             &copy; 2021 - Hotell SeaSharp - <a asp-area="" asp-controller="Home" asp-action="Index">Till första sidan</a>
         </div>
     </footer>
-
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
+    <script src="//cdn.jsdelivr.net/npm/sweetalert2@10"></script>
     @await RenderSectionAsync("Scripts", required: false)
 
 </body>
