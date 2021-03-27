@@ -308,10 +308,13 @@ namespace ClientLogIn.Controllers
         {
             try
             {
+
+
                 DateTime iDate = WorkShift.Date;
                 var result = _context.WorkShifts.Where(
                     ws => ws.Date == WorkShift.Date
                 && ws.ShiftTypeId == WorkShift.ShiftTypeId
+                && ws.UserId == WorkShift.UserId
                 ).FirstOrDefault();
 
                 if (result != null)
@@ -330,14 +333,16 @@ namespace ClientLogIn.Controllers
             {
 
                 _logger.LogError(e.Message);
+                return RedirectToAction("GetAllUsers", "Users");
             }
-            return View();
+
         }
 
         public int DateMapper(DateTime date, ViewModel viewModel)
         {
             try
             {
+                date = new DateTime(date.Year, date.Month, 1);
                 //Hämtar månadens första dag
                 string day = date.DayOfWeek.ToString();
                 //Hämtar antalet dagar i månaden
